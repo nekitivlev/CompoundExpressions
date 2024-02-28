@@ -357,7 +357,6 @@ fun whoIsOldest(person1: Person?, person2: Person?) {
         print("Your need two people to compare ages")
     }
 }
-
 ```
 ### 2. `while` Loop
 #### 1. Streaming Data Processing

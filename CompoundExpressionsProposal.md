@@ -7,8 +7,8 @@ This proposal aims to add the ability to declare local variables directly in if 
 - `if` proposal
 ## `while` proposal
 ### Motivation
-There are many requests in the kotlin community to add a classic for loop. 
-This is confirmed by the number of tracks on discuss.kotlinlang.org devoted to it and by the presence of not a small number of self-written classics like this one:
+There are many requests in the kotlin community to add a "classic" `for` loop. 
+This is confirmed by the number of threads on discuss.kotlinlang.org devoted to it and by the presence of not a small number of self-written classics like this one:
 https://discuss.kotlinlang.org/t/any-reason-to-not-keep-the-good-old-for-loop-format/25287/20
 ```kotlin
 fun main() {
@@ -53,6 +53,7 @@ inline fun <T> For(init: T, condition: (T) -> Boolean, increment: (T) -> T, body
     }
 }
 ```
+### Benefits
 There are several benefits to adding this feature:
 1. **Increased Flexibility:** Allows for more complex iteration patterns without the need for additional control flow statements.
 2. **Code Conciseness:** Reduces the need for external initialization and update statements, encapsulating all loop-related logic within the for statement.
@@ -87,7 +88,9 @@ for (val i = 0; i < numIterations; i++) {
     }
     ```
 ### Drawbacks of adding "classic" `for`
-But as we can see the potential use of this feature looks a bit strange. There are also people in the kotlin community who are against adding such a loop (https://youtrack.jetbrains.com/issue/KT-1447Please-add-support-for-traditional-fori10-i32-i-32-loops).Also if you look at the specification of kotlin you may notice that the for loop is essentially syntactic sugar and was not designed as what is proposed above. That's why we decided that it's better to add the possibility of declaring local variables in the while loop, because the for loop is intended only for iteration, and for everything else there is a while loop and all the examples above can be easily rewritten with the help of the while loop. 
+But as we can see the potential use of this feature looks a bit strange. There are also people in the kotlin community who are against adding such a loop (https://youtrack.jetbrains.com/issue/KT-1447/Please-add-support-for-traditional-fori10-i32-i-32-loops).
+
+Also if you look at the specification of kotlin you may notice that the `for` loop is essentially syntactic sugar and was not designed as what is proposed above (https://kotlinlang.org/spec/statements.html#loop-statements). That's why we decided that it's better to add the possibility of declaring local variables in the `while` loop, because the `for` loop is intended only for iteration, and for everything else there is a `while` loop and all the examples above can be easily rewritten with the help of the `while` loop. 
 ### Proposed syntax
 ```kotlin
 while (val var1 = <expression1> ,val var2 = <expression2>, val varN = <expressionN>) {
@@ -97,20 +100,30 @@ while (val var1 = <expression1> ,val var2 = <expression2>, val varN = <expressio
 ### Potential uses
 1. All potential uses of the classic `for`
 2. Streaming Data Processing
-In cases where the data comes from a stream (such as a file stream or network connection) and you want to continue processing while the stream is open and accessible.
+In cases where the data comes from a stream (such as a file stream or network connection) and you want to continue processing while the stream is open and accessible. (https://discuss.kotlinlang.org/t/why-i-cant-apply-value-inside-while-loop/7762)
 ```kotlin
-while (val line = stream.readLine()) {
-    // Processing every line
+val buffer = ByteArray(8192)
+val bytesRead : Int
+val byteArrayOutputStream = ByteArrayOutputStream()
+val inputStream = FileInputStream(file)
+while((val byteRead = inputStream.read(buffer)) != -1){
+
 }
 ```
 
 ### Benefits
 1. All the benefits that have been said about adding the classic `for`
 2. Ability to iterate over objects that will change during iteration.
-
+3. Better null safety in case of working with mutable objects (like stream)
+### List of Discussions
+* [Any reason to not keep the good old for loop format?](https://discuss.kotlinlang.org/t/any-reason-to-not-keep-the-good-old-for-loop-format/25287/20)
+* [`for` loop with dynamic condition](https://discuss.kotlinlang.org/t/for-loop-with-dynamic-condition/57)
+* [For-loop dynamic step](https://discuss.kotlinlang.org/t/for-loop-dynamic-step/6429)
+* [KT-1447](https://youtrack.jetbrains.com/issue/KT-1447/Please-add-support-for-traditional-fori10-i32-i-32-loops)
+* [Why I can't apply value inside while loop?](https://discuss.kotlinlang.org/t/why-i-cant-apply-value-inside-while-loop/7762) 
 ## `if` proposal
 ### Motivation 
-There are requests in the Kotlin community to add functionality to handle multiple variables that could potentially be null (https://discuss.kotlinlang.org/t/feature-request-null-check-for-arguments-in-function-invoke/19838). We found it most promising and convenient to add the ability to declare local variables inside `if`. Since if a variable is mutable and accessible outside of a scope, the only way to ensure that it will not change is to make it local. Even ?.let {} for a single variable does this:
+There are requests in the Kotlin community to add functionality to handle multiple variables that could potentially be `null` (https://discuss.kotlinlang.org/t/feature-request-null-check-for-arguments-in-function-invoke/19838). We found it most promising and convenient to add the ability to declare local variables inside `if`. Since if a variable is mutable and accessible outside of a scope, the only way to ensure that it will not change is to make it local. Even `?.let {}` for a single variable does this:
 ```kotlin
 fun test() {
     name?.let { doSomething(it) }
@@ -158,7 +171,7 @@ fun whoIsOldest(person1: Person?, person2: Person?) {
 }
 ```
 The benefit however is that is that you can use earlier values in later expressions. In the example above p1 and p2 have already been null checked so we can access their age property directly.
-And because the expressions can be anything that returns a nullable type it can also be used with safe casts:
+And because the expressions can be anything that returns a nullable type it can also be used with `safe-casts`:
 ```kotlin
 if (val child = person as? Child, val car = child.favouriteToy as? Car) {
     car.race()
@@ -174,4 +187,7 @@ if (val childAge = person.child?.age, childAge >= 6 && childAge < 18) {
 ### Benefits
 1. **Enhanced Readability and Conciseness** This feature significantly cleans up the code by reducing the need for nested let blocks or separate variable declarations and checks. 
 2. **Better work with scopes** This feature allows you to better manage variable visibility and not make variables visible where they are not needed.
+### List of discussions 
+* [Feature Request: Null Check for Arguments in Function Invoke](https://discuss.kotlinlang.org/t/feature-request-null-check-for-arguments-in-function-invoke/19838)
+* [Kotlin null check for multiple nullable var’s](https://discuss.kotlinlang.org/t/kotlin-null-check-for-multiple-nullable-vars/1946)
 

@@ -56,8 +56,8 @@ promising for the application of compound expressions in Kotlin.
 
 ### Motivation of adding compound expressions in `while`
 
-The Kotlin community has consistently shown an appetite for more 
-versatile looping constructs, reminiscent of the "classic" for loop 
+The Kotlin community has consistently shown an appetite `for` more 
+versatile looping constructs, reminiscent of the "classic" `for` loop 
 seen in other programming languages. This interest is evident from 
 numerous discussions and custom implementations shared across Kotlin 
 forums, such as this detailed example shared on
@@ -201,8 +201,8 @@ for (val i = 0; i < numIterations; i++) {
 ### Drawbacks of adding "classic" `for`
 
 But as we can see the potential use of this feature looks a bit strange. 
-Also, when it comes to adding classical for for in Kotlin people specify as 
-potential uses some of the features associated with classical for from C, which are 
+Also, when it comes to adding classical `for` in Kotlin people specify as 
+potential uses some of the features associated with classical `for` from C, which are 
 also present in Kotlin, but require the use of specific syntax. 
 Among them:
 
@@ -257,7 +257,7 @@ rewritten with the help of the `while` loop.
 
 ### Proposed syntax of compound expressions in `while`
 ```kotlin
-while (val var1 = <expression1> ,val var2 = <expression2>, val varN = <expressionN>) {
+while (val var1 = <expression1> ,val var2 = <expression2>, val varN = <expressionN>, var1 != null, var2 != null, varN != null) {
   
 }
 ```
@@ -284,6 +284,7 @@ while((val byteRead = inputStream.read(buffer)) != -1){
 ```
 
 3. Paged data loading.
+
 If you load data page by page (for example, from an API), where each 
 request returns data for the next page as long as the data is 
 available.
@@ -325,11 +326,13 @@ are locally scoped and not subject to unintended modifications.
 ## Adding compound expressions in `if` proposal
 
 ### Motivation of adding compound expressions in `if`
+
 Kotlin prides itself on null safety, but the current mechanisms for 
 dealing with multiple nullable variables can sometimes lead to less 
 clean code and an increase in boilerplate. For instance, when calling 
 a function only if certain parameters are not null, developers might 
 resort to nested let blocks:
+
 ```kotlin
 val result = a?.let { aNotNull ->
     c?.let { cNotNull ->
@@ -337,8 +340,10 @@ val result = a?.let { aNotNull ->
     }
 }
 ```
+
 ([Kotlin Discussions](https://discuss.kotlinlang.org/t/feature-request-null-check-for-arguments-in-function-invoke/19838
 ))
+
 This approach, while functional, introduces additional complexity and verbosity, especially as the number of parameters increases.
 
 #### Current Solutions and Their Limitations
@@ -413,10 +418,12 @@ This approach, while functional, introduces additional complexity and verbosity,
 
 In light of these challenges, we propose the introduction of a syntax 
 that allows for the declaration of local variables within `if` 
-conditions. This approach not only mirrors Kotlin's commitment to null 
+conditions. 
+This approach not only mirrors Kotlin's commitment to null 
 safety and concise code but also addresses the mutable state 
 issue—ensuring variables within the `if` scope remain unchanged 
-throughout their lifecycle. For instance, Kotlin's current `?.let {}` 
+throughout their lifecycle. 
+For instance, Kotlin's current `?.let {}` 
 syntax for handling a single nullable variable translates to a pattern 
 where the variable is safely checked for nullity before proceeding:
 
@@ -453,7 +460,7 @@ So a similar syntax in Koltin could be the following:
 ### Proposed syntax of compound expressions in `if`
 
 ```kotlin
-if (val var1 = <expression1> ,val var2 = <expression2>, val varN = <expressionN>) {
+if (val var1 = <expression1> ,val var2 = <expression2>, val varN = <expressionN>, var1 != null, var2 != null, varN != null) {
 }
 
 ```
@@ -492,7 +499,7 @@ But there are also other suggestions for adding similar functionality, such as:
 
 Taking into account everything described above, it was decided that the best option is the option described at the very beginning of this part, namely:
 ```kotlin
-if (val var1 = <expression1> ,val var2 = <expression2>, val varN = <expressionN>) {
+if (val var1 = <expression1> ,val var2 = <expression2>, val varN = <expressionN>, var1 != null, var2 !=null, varN != null) {
 }
 
 ```

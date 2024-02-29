@@ -2,12 +2,13 @@
 
 ## Abstract
 
-After studying a lot of discussions/tickets/analogs in other languages 
-it was decided that most of the requested features already exist in 
-Kotlin in one form or another 
-in one form or another, so in this proposal we focused on adding 
-compound expressions 
-to the if and while statements, as this seems to be the most promising place to apply compound expressions in Kotlin.
+Upon thorough investigation of community discussions, tickets, and 
+analogous constructs in other programming languages, it has been 
+determined that many of the requested features are already present in 
+Kotlin, albeit in different forms. Therefore, this proposal 
+concentrates on introducing compound expressions to if and while 
+statements, as these areas appear to be the most beneficial and 
+promising for the application of compound expressions in Kotlin.
 
 ## Table of contents
 - [Abstract](#abstract)
@@ -37,7 +38,7 @@ to the if and while statements, as this seems to be the most promising place to 
 There are many requests in the kotlin community to add a "classic" `for` loop. 
 This is confirmed by the number of threads on discuss.kotlinlang.org devoted to it 
 and by the presence of not a small number of self-written classics like this one:
-https://discuss.kotlinlang.org/t/any-reason-to-not-keep-the-good-old-for-loop-format/25287/20
+[Kotlin Discussions](https://discuss.kotlinlang.org/t/any-reason-to-not-keep-the-good-old-for-loop-format/25287/20)
 
 ```kotlin
 fun main() {
@@ -151,7 +152,7 @@ for (val i = 0; i < numIterations; i++) {
 ### Potential uses of "classic" `for`
 1. Сhanging iteration boundaries while traversing a loop 
 
-    https://discuss.kotlinlang.org/t/for-loop-with-dynamic-condition/57
+    [Kotlin Discussions](https://discuss.kotlinlang.org/t/for-loop-with-dynamic-condition/57)
     ```kotlin
     for (val i = 0; i < numIterations; i++) {
 
@@ -166,7 +167,7 @@ for (val i = 0; i < numIterations; i++) {
 
 2. Dynamically changing the step while iterating through a loop
 
-    https://discuss.kotlinlang.org/t/for-loop-dynamic-step/6429
+    [Kotlin Discussions](https://discuss.kotlinlang.org/t/for-loop-dynamic-step/6429)
     ```kotlin
     for(var i = 0; i < 500; i+= (if (i < 40) 10 else 20)) {
         println("Now at $i")
@@ -221,10 +222,10 @@ Among them:
     ```
 
 There are also people in the kotlin community who are against adding such a loop
-(https://youtrack.jetbrains.com/issue/KT-1447/Please-add-support-for-traditional-fori10-i32-i-32-loops).
+[KT-1447](https://youtrack.jetbrains.com/issue/KT-1447/Please-add-support-for-traditional-fori10-i32-i-32-loops).
 Also if you look at the specification of kotlin you may notice that the `for` loop 
 is essentially syntactic sugar and was not designed as what is proposed above 
-(https://kotlinlang.org/spec/statements.html#loop-statements). That's why we 
+[Kotlin Specifaction](https://kotlinlang.org/spec/statements.html#loop-statements). That's why we 
 decided that it's better to add the possibility of declaring local variables in the
 `while` loop, because the `for` loop is intended only for iteration, and for 
 everything else there is a `while` loop and all the examples above can be easily 
@@ -243,7 +244,7 @@ while (val var1 = <expression1> ,val var2 = <expression2>, val varN = <expressio
 
 2. Streaming Data Processing
 
-In cases where the data comes from a stream (such as a file stream or network connection) and you want to continue processing while the stream is open and accessible. (https://discuss.kotlinlang.org/t/why-i-cant-apply-value-inside-while-loop/7762)
+In cases where the data comes from a stream (such as a file stream or network connection) and you want to continue processing while the stream is open and accessible. [Kotlin Discussions](https://discuss.kotlinlang.org/t/why-i-cant-apply-value-inside-while-loop/7762)
 
 ```kotlin
 val buffer = ByteArray(8192)
@@ -288,14 +289,100 @@ while (val data = api.loadData(page)) {
 ## `if` proposal
 
 ### Motivation for `if` 
+Kotlin prides itself on null safety, but the current mechanisms for 
+dealing with multiple nullable variables can sometimes lead to less 
+clean code and an increase in boilerplate. For instance, when calling 
+a function only if certain parameters are not null, developers might 
+resort to nested let blocks:
+```kotlin
+val result = a?.let { aNotNull ->
+    c?.let { cNotNull ->
+        someFunction(aNotNull, b, cNotNull)
+    }
+}
+```
+([Kotlin Discussions](https://discuss.kotlinlang.org/t/feature-request-null-check-for-arguments-in-function-invoke/19838
+))
+This approach, while functional, introduces additional complexity and verbosity, especially as the number of parameters increases.
 
-There are requests in the Kotlin community to add functionality to handle multiple variables that could potentially be `null` 
-(https://discuss.kotlinlang.org/t/feature-request-null-check-for-arguments-in-function-invoke/19838). 
+#### Current Solutions and Their Limitations
 
-We found it most promising and convenient to add the ability to declare local variables inside 
-`if`.
-Since if a variable is mutable and accessible outside of a scope, the only way to ensure that it will not change is to make it local. 
-Even `?.let {}` for a single variable does this:
+1. Using `let` with `Pair` Container ([Kotlin Discussions](https://discuss.kotlinlang.org/t/kotlin-null-check-for-multiple-nullable-vars/1946/2))
+
+    Using `Pair` combined with the `let` extension function to handle 
+    two null parameters simultaneously.
+
+    ```kotlin
+    fun main(args: Array<String>) {    
+        val name: String? = "john"
+        val age: Int? = 99
+        Pair(name, age).let {
+            println("name: $name, age: $age")
+        }
+    }
+    
+    fun Pair<String?, Int?>.let(action: (pair: Pair<String?, Int?>) -> Unit) {
+        if (this.first != null && this.second != null)
+            action(this)
+    }
+    ```
+
+    While using Pair with let can handle two nullable parameters, it 
+    becomes less flexible and more complex with more than two 
+    parameters.
+
+    
+
+2. Using of generic functions ([Kotlin Discussions](https://discuss.kotlinlang.org/t/kotlin-null-check-for-multiple-nullable-vars/1946/4))
+
+    Creating a generic `ifNotNull` function that executes code only if 
+    all parameters are non-null.
+
+    ```kotlin
+    inline fun <A, B, R> ifNotNull(a: A?, b: B?, code: (A, B) -> R) {
+        if (a != null && b != null) {
+            code(a, b)
+        }
+    }
+
+    fun test() {
+        ifNotNull(name, age) { name, age ->
+          doSth(name, age)
+        }
+    }
+    ```
+
+    Using of a generic function reduces some boilerplate but 
+    requires overloading the function for different numbers of 
+    arguments, adding to the codebase's complexity.
+
+3. Using of extension functions ([Kotlin Discussions](https://discuss.kotlinlang.org/t/feature-request-null-check-for-arguments-in-function-invoke/19838/2))
+
+    Using the `callIfNotNull` function as an extension on function 
+    references to call only if all parameters are non-null.
+
+    ```kotlin
+        inline fun <T1, T2, T3, R> KFunction3<T1, T2, T3, R>.callIfNotNull(a: T1?, b: T2?, c: T3?): R? {
+            a ?: return null
+            b ?: return null
+            c ?: return null
+
+        return this(a, b, c)
+    }
+
+    ::someFunction.callIfNotNull(a, b, c)
+    ```
+
+    This method simplifies calling functions with nullable parameters but necessitates a separate function definition for each variable count, which is not ideal for code maintenance and readability.
+
+In light of these challenges, we propose the introduction of a syntax 
+that allows for the declaration of local variables within `if` 
+conditions. This approach not only mirrors Kotlin's commitment to null 
+safety and concise code but also addresses the mutable state 
+issue—ensuring variables within the `if` scope remain unchanged 
+throughout their lifecycle. For instance, Kotlin's current `?.let {}` 
+syntax for handling a single nullable variable translates to a pattern 
+where the variable is safely checked for nullity before proceeding:
 
 ```kotlin
 fun test() {
@@ -303,7 +390,6 @@ fun test() {
 }
 
 ```
-
 compiles to the equivalent java code:
 
 ```java 
@@ -338,9 +424,13 @@ if (val var1 = <expression1> ,val var2 = <expression2>, val varN = <expressionN>
 
 ### Potential uses of compound expressions in `if`
 
-1. Smartcastes to types without `?`
+1. **Direct Smart Casts for Nullable Types** ([Kotlin Discussions](https://discuss.kotlinlang.org/t/kotlin-null-check-for-multiple-nullable-vars/1946/22))
 
-https://discuss.kotlinlang.org/t/kotlin-null-check-for-multiple-nullable-vars/1946/22
+Consider a scenario where you need to determine which of two 
+individuals is older, and both are represented by nullable `Person` 
+objects. The enhanced `if` syntax facilitates direct checks and smart 
+casts, allowing for seamless access to properties like `age` without 
+additional null checks:
 
 ```kotlin
 fun whoIsOldest(person1: Person?, person2: Person?) {
@@ -382,12 +472,16 @@ if (val childAge = person.child?.age, childAge >= 6 && childAge < 18) {
 
 ### Benefits of adding compound expressions in `if`
 
-1. **Enhanced Readability and Conciseness** This feature significantly 
-cleans up the code by reducing the need for nested let blocks or 
-separate variable declarations and checks. 
+1. **Enhanced Code Clarity:** Directly declaring variables within `if` 
+conditions leads to cleaner, more understandable code.
 
-2. **Better work with scopes** This feature allows you to better 
-manage variable visibility and not make variables visible where they are not needed.
+2. **Reduced Boilerplate:** Eliminates the need for nested `let` blocks or 
+separate variable checks, streamlining null handling.
+
+3. **Improved Safety and Consistency:** Localizing variable declarations 
+within `if` conditions ensures immutability and reduces the risk of 
+unintended side effects, aligning with Kotlin's emphasis on safety and 
+predictability.
 
 
 ### List of discussions related to compound expressions in `if` 

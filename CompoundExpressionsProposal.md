@@ -1,15 +1,23 @@
 # Compound expressions 
+
 ## Abstract
+
 This proposal aims to add the ability to declare local variables directly in if and while condition expressions in Kotlin.
+
 ## Table of contents
 - Abstract
 - `while` proposal
 - `if` proposal
+
 ## `while` proposal
+
 ### Motivation
+
 There are many requests in the kotlin community to add a "classic" `for` loop. 
-This is confirmed by the number of threads on discuss.kotlinlang.org devoted to it and by the presence of not a small number of self-written classics like this one:
+This is confirmed by the number of threads on discuss.kotlinlang.org devoted to it 
+and by the presence of not a small number of self-written classics like this one:
 https://discuss.kotlinlang.org/t/any-reason-to-not-keep-the-good-old-for-loop-format/25287/20
+
 ```kotlin
 fun main() {
     For(1, { it < 10 }, { it + 1 }) { i ->
@@ -53,17 +61,28 @@ inline fun <T> For(init: T, condition: (T) -> Boolean, increment: (T) -> T, body
     }
 }
 ```
+
 ### Benefits
+
 There are several benefits to adding this feature:
-1. **Increased Flexibility:** Allows for more complex iteration patterns without the need for additional control flow statements.
-2. **Code Conciseness:** Reduces the need for external initialization and update statements, encapsulating all loop-related logic within the for statement.
-3. **Familiar Syntax:** Leverages a loop syntax familiar to many developers, making Kotlin more accessible to newcomers from other languages.
+
+1. **Increased Flexibility:** Allows for more complex iteration patterns without
+the need for additional control flow statements.
+
+2. **Code Conciseness:** Reduces the need for external initialization and update 
+statements, encapsulating all loop-related logic within the for statement.
+
+3. **Familiar Syntax:** Leverages a loop syntax familiar to many developers, making
+Kotlin more accessible to newcomers from other languages.
+
 ### Proposed syntax
+
 ```kotlin
 for (val i = 0; i < numIterations; i++) {
     // loop-body
 }
 ```
+
 ### Potential uses
 1. Сhanging iteration boundaries while traversing a loop 
 
@@ -79,6 +98,7 @@ for (val i = 0; i < numIterations; i++) {
 
     }
     ```
+
 2. Dynamically changing the step while iterating through a loop
 
     https://discuss.kotlinlang.org/t/for-loop-dynamic-step/6429
@@ -87,20 +107,35 @@ for (val i = 0; i < numIterations; i++) {
         println("Now at $i")
     }
     ```
-### Drawbacks of adding "classic" `for`
-But as we can see the potential use of this feature looks a bit strange. There are also people in the kotlin community who are against adding such a loop (https://youtrack.jetbrains.com/issue/KT-1447/Please-add-support-for-traditional-fori10-i32-i-32-loops).
 
-Also if you look at the specification of kotlin you may notice that the `for` loop is essentially syntactic sugar and was not designed as what is proposed above (https://kotlinlang.org/spec/statements.html#loop-statements). That's why we decided that it's better to add the possibility of declaring local variables in the `while` loop, because the `for` loop is intended only for iteration, and for everything else there is a `while` loop and all the examples above can be easily rewritten with the help of the `while` loop. 
+### Drawbacks of adding "classic" `for`
+
+But as we can see the potential use of this feature looks a bit strange. There are 
+also people in the kotlin community who are against adding such a loop (https://youtrack.jetbrains.com/issue/KT-1447/Please-add-support-for-traditional-fori10-i32-i-32-loops).
+
+Also if you look at the specification of kotlin you may notice that the `for` loop 
+is essentially syntactic sugar and was not designed as what is proposed above 
+(https://kotlinlang.org/spec/statements.html#loop-statements). That's why we 
+decided that it's better to add the possibility of declaring local variables in the
+`while` loop, because the `for` loop is intended only for iteration, and for 
+everything else there is a `while` loop and all the examples above can be easily 
+rewritten with the help of the `while` loop. 
+
 ### Proposed syntax
 ```kotlin
 while (val var1 = <expression1> ,val var2 = <expression2>, val varN = <expressionN>) {
   
 }
 ```
+
 ### Potential uses
+
 1. All potential uses of the classic `for`
+
 2. Streaming Data Processing
+
 In cases where the data comes from a stream (such as a file stream or network connection) and you want to continue processing while the stream is open and accessible. (https://discuss.kotlinlang.org/t/why-i-cant-apply-value-inside-while-loop/7762)
+
 ```kotlin
 val buffer = ByteArray(8192)
 val bytesRead : Int
@@ -111,26 +146,54 @@ while((val byteRead = inputStream.read(buffer)) != -1){
 }
 ```
 
+3. Paged data loading.
+If you load data page by page (for example, from an API), where each request returns data for the next page as long as the data is available.
+```kotlin
+var page = 1
+while (val data = api.loadData(page)) {
+    process(data)
+    page++
+}
+``` 
+
 ### Benefits
+
 1. All the benefits that have been said about adding the classic `for`
+
 2. Ability to iterate over objects that will change during iteration.
+
 3. Better null safety in case of working with mutable objects (like stream)
+
 ### List of Discussions
+
 * [Any reason to not keep the good old for loop format?](https://discuss.kotlinlang.org/t/any-reason-to-not-keep-the-good-old-for-loop-format/25287/20)
+
 * [`for` loop with dynamic condition](https://discuss.kotlinlang.org/t/for-loop-with-dynamic-condition/57)
+
 * [For-loop dynamic step](https://discuss.kotlinlang.org/t/for-loop-dynamic-step/6429)
+
 * [KT-1447](https://youtrack.jetbrains.com/issue/KT-1447/Please-add-support-for-traditional-fori10-i32-i-32-loops)
+
 * [Why I can't apply value inside while loop?](https://discuss.kotlinlang.org/t/why-i-cant-apply-value-inside-while-loop/7762) 
+
 ## `if` proposal
+
 ### Motivation 
-There are requests in the Kotlin community to add functionality to handle multiple variables that could potentially be `null` (https://discuss.kotlinlang.org/t/feature-request-null-check-for-arguments-in-function-invoke/19838). We found it most promising and convenient to add the ability to declare local variables inside `if`. Since if a variable is mutable and accessible outside of a scope, the only way to ensure that it will not change is to make it local. Even `?.let {}` for a single variable does this:
+
+There are requests in the Kotlin community to add functionality to handle multiple variables that could potentially be `null` (https://discuss.kotlinlang.org/t/feature-request-null-check-for-arguments-in-function-invoke/19838). 
+We found it most promising and convenient to add the ability to declare local variables inside `if`.
+Since if a variable is mutable and accessible outside of a scope, the only way to ensure that it will not change is to make it local. 
+Even `?.let {}` for a single variable does this:
+
 ```kotlin
 fun test() {
     name?.let { doSomething(it) }
 }
 
 ```
+
 compiles to the equivalent java code:
+
 ```java 
 public final void test() {
     String var10000 = this.name;
@@ -140,23 +203,32 @@ public final void test() {
     }
 }
 ```
+
 Swift has a similar problem with null checking multiple vars and solves this by making it easy to declare local values within if statements:
+
 ```swift
 // Swift code 
 if let name = name, let age = age {
     doSth(name, age)
 }
 ```
+
 So a similar syntax in Koltin could be the following:
+
 ### Proposed syntax
+
 ```kotlin
 if (val var1 = <expression1> ,val var2 = <expression2>, val varN = <expressionN>) {
 }
+
 ```
+
 ### Potential uses
+
 1. Smartcastes to types without `?`
 
 https://discuss.kotlinlang.org/t/kotlin-null-check-for-multiple-nullable-vars/1946/22
+
 ```kotlin
 fun whoIsOldest(person1: Person?, person2: Person?) {
     if (val p1 = person1, val p2 = person2, val age1 = p1.age, age2 = p2.age) {
@@ -170,24 +242,39 @@ fun whoIsOldest(person1: Person?, person2: Person?) {
     }
 }
 ```
-The benefit however is that is that you can use earlier values in later expressions. In the example above p1 and p2 have already been null checked so we can access their age property directly.
-And because the expressions can be anything that returns a nullable type it can also be used with `safe-casts`:
+
+The benefit however is that is that you can use earlier values in later 
+expressions. In the example above p1 and p2 have already been null checked so we 
+can access their age property directly.
+And because the expressions can be anything that returns a nullable type it can 
+also be used with `safe-casts`:
+
 ```kotlin
 if (val child = person as? Child, val car = child.favouriteToy as? Car) {
     car.race()
     print("$child is racing their toy $car")
 }
 ```
-A additional improvement that could be made which is also available in swift is allowing boolean expressions alongside the nullable expressions. It’s a fairly common use case to check if something is non-null and then perform an additional check to see if it is appropriate to use.
+
+A additional improvement that could be made which is also available in swift is 
+allowing boolean expressions alongside the nullable expressions. It’s a fairly 
+common use case to check if something is non-null and then perform an additional 
+check to see if it is appropriate to use.
+
 ```kotlin
 if (val childAge = person.child?.age, childAge >= 6 && childAge < 18) {
     print("$person has to drop their child at school each weekday")
 }
 ```
+
 ### Benefits
+
 1. **Enhanced Readability and Conciseness** This feature significantly cleans up the code by reducing the need for nested let blocks or separate variable declarations and checks. 
+
 2. **Better work with scopes** This feature allows you to better manage variable visibility and not make variables visible where they are not needed.
+
 ### List of discussions 
 * [Feature Request: Null Check for Arguments in Function Invoke](https://discuss.kotlinlang.org/t/feature-request-null-check-for-arguments-in-function-invoke/19838)
+
 * [Kotlin null check for multiple nullable var’s](https://discuss.kotlinlang.org/t/kotlin-null-check-for-multiple-nullable-vars/1946)
 

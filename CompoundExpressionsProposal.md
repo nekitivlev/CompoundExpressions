@@ -244,7 +244,10 @@ while (val var1 = <expression1> ,val var2 = <expression2>, val varN = <expressio
 
 2. Streaming Data Processing
 
-In cases where the data comes from a stream (such as a file stream or network connection) and you want to continue processing while the stream is open and accessible. [Kotlin Discussions](https://discuss.kotlinlang.org/t/why-i-cant-apply-value-inside-while-loop/7762)
+In cases where the data comes from a stream (such as a file stream or 
+network connection) and you want to continue processing while the 
+stream is open and accessible. ([Kotlin Discussions]) (https://discuss.
+kotlinlang.org/t/why-i-cant-apply-value-inside-while-loop/7762)
 
 ```kotlin
 val buffer = ByteArray(8192)
@@ -257,7 +260,10 @@ while((val byteRead = inputStream.read(buffer)) != -1){
 ```
 
 3. Paged data loading.
-If you load data page by page (for example, from an API), where each request returns data for the next page as long as the data is available.
+If you load data page by page (for example, from an API), where each 
+request returns data for the next page as long as the data is 
+available.
+
 ```kotlin
 var page = 1
 while (val data = api.loadData(page)) {
@@ -268,11 +274,17 @@ while (val data = api.loadData(page)) {
 
 ### Benefits of adding compound expressions in `while`
 
-1. All the benefits that have been said about adding the classic `for`
+1. **Enhanced Flexibility and Control:** Facilitates complex iteration 
+patterns, emulating "classic" `for` loop functionalities within the 
+while loop's more versatile framework.
 
-2. Ability to iterate over objects that will change during iteration.
+2. **Code Conciseness and Clarity:** Reduces boilerplate by allowing 
+direct variable declaration and initialization in the loop condition, 
+improving readability.
 
-3. Better null safety in case of working with mutable objects (like stream)
+3. **Safety and Predictability:** Aligns with Kotlin's null safety and 
+immutability principles by ensuring variables declared within the loop 
+are locally scoped and not subject to unintended modifications.
 
 ### List of discussions related to compound expressions in `while`
 

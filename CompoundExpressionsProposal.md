@@ -2,19 +2,37 @@
 
 ## Abstract
 
-After researching a large number of discussions/tickets/analogs in other languages 
-it was decided that most of the requested features already exist in Kotlin in one 
-form or another, so in this proposal we concentrated on adding compound expressions 
-to if and while statements.
+After studying a lot of discussions/tickets/analogs in other languages 
+it was decided that most of the requested features already exist in 
+Kotlin in one form or another 
+in one form or another, so in this proposal we focused on adding 
+compound expressions 
+to the if and while statements, as this seems to be the most promising place to apply compound expressions in Kotlin.
 
 ## Table of contents
-- Abstract
-- `while` proposal
-- `if` proposal
+- [Abstract](#abstract)
+- [Table of contents](#table-of-contents) 
+- [`while` proposal](#while-proposal)
+    - [Motivation for `while`](#motivation-for-while)
+        - [Benefits of adding "classic" `for`](#benefits-of-adding-classic-for)
+        - [Proposed syntax of "classic" `for`](#proposed-syntax-of-classic-for)
+        - [Potential uses of "classic" `for`](#potential-uses-of-classic-for)
+        - [Drawbacks of adding "classic" `for`](#drawbacks-of-adding-classic-for)
+    - [Proposed syntax of compound expressions in `while`](#proposed-syntax-of-compound-expressions-in-while)
+    - [Potential uses of compound expressions in `while`](#potential-uses-of-compound-expressions-in-while)
+    - [Benefits of adding compound expressions in `while`](#benefits-of-adding-compound-expressions-in-while)
+    - [List of discussions related to compound expressions in `while`](#list-of-discussions-related-to-compound-expressions-in-while)
+
+- [`if` proposal](#if-proposal)
+    - [Motivation for `if`](#motivation-for-if)
+    - [Proposed syntax of compound expressions in `if`](#proposed-syntax-of-compound-expressions-in-if)
+    - [Potential uses of compound expressions in `if`](#potential-uses-of-compound-expressions-in-if)
+    - [Benefits of adding compound expressions in `if`](#benefits-of-adding-compound-expressions-in-if)
+    - [List of discussions related to compound expressions in `if`](#list-of-discussions-related-to-compound-expressions-in-if)
 
 ## `while` proposal
 
-### Motivation
+### Motivation for `while`
 
 There are many requests in the kotlin community to add a "classic" `for` loop. 
 This is confirmed by the number of threads on discuss.kotlinlang.org devoted to it 
@@ -64,7 +82,9 @@ inline fun <T> For(init: T, condition: (T) -> Boolean, increment: (T) -> T, body
     }
 }
 ```
+
 or this one:
+
 ```kotlin
 private object BreakThrowable: Throwable() {
     override fun fillInStackTrace(): Throwable = this // Good for performance
@@ -106,20 +126,21 @@ fun main() {
 }
 ```
 
-### Benefits
+### Benefits of adding "classic" `for`
 
 There are several benefits to adding this feature:
 
-1. **Increased Flexibility:** Allows for more complex iteration patterns without
-the need for additional control flow statements.
+1. **Increased Flexibility:** Allows for more complex iteration 
+patterns without the need for additional control flow statements.
 
-2. **Code Conciseness:** Reduces the need for external initialization and update 
-statements, encapsulating all loop-related logic within the for statement.
+2. **Code Conciseness:** Reduces the need for external initialization 
+and update statements, encapsulating all loop-related logic within the 
+for statement.
 
 3. **Familiar Syntax:** Leverages a loop syntax familiar to many developers, making
 Kotlin more accessible to newcomers from other languages.
 
-### Proposed syntax
+### Proposed syntax of "classic" `for` 
 
 ```kotlin
 for (val i = 0; i < numIterations; i++) {
@@ -127,7 +148,7 @@ for (val i = 0; i < numIterations; i++) {
 }
 ```
 
-### Potential uses
+### Potential uses of "classic" `for`
 1. Сhanging iteration boundaries while traversing a loop 
 
     https://discuss.kotlinlang.org/t/for-loop-with-dynamic-condition/57
@@ -209,14 +230,14 @@ decided that it's better to add the possibility of declaring local variables in 
 everything else there is a `while` loop and all the examples above can be easily 
 rewritten with the help of the `while` loop. 
 
-### Proposed syntax
+### Proposed syntax of compound expressions in `while`
 ```kotlin
 while (val var1 = <expression1> ,val var2 = <expression2>, val varN = <expressionN>) {
   
 }
 ```
 
-### Potential uses
+### Potential uses of compound expressions in `while`
 
 1. All potential uses of the classic `for`
 
@@ -244,7 +265,7 @@ while (val data = api.loadData(page)) {
 }
 ``` 
 
-### Benefits
+### Benefits of adding compound expressions in `while`
 
 1. All the benefits that have been said about adding the classic `for`
 
@@ -252,21 +273,21 @@ while (val data = api.loadData(page)) {
 
 3. Better null safety in case of working with mutable objects (like stream)
 
-### List of Discussions
+### List of discussions related to compound expressions in `while`
 
-* [Any reason to not keep the good old for loop format?](https://discuss.kotlinlang.org/t/any-reason-to-not-keep-the-good-old-for-loop-format/25287/20)
+* [Kotlin Discussions - Any reason to not keep the good old for loop format?](https://discuss.kotlinlang.org/t/any-reason-to-not-keep-the-good-old-for-loop-format/25287/20)
 
-* [`for` loop with dynamic condition](https://discuss.kotlinlang.org/t/for-loop-with-dynamic-condition/57)
+* [Kotlin Discussions - `for` loop with dynamic condition](https://discuss.kotlinlang.org/t/for-loop-with-dynamic-condition/57)
 
-* [For-loop dynamic step](https://discuss.kotlinlang.org/t/for-loop-dynamic-step/6429)
+* [Kotlin Discussions - For-loop dynamic step](https://discuss.kotlinlang.org/t/for-loop-dynamic-step/6429)
 
 * [KT-1447](https://youtrack.jetbrains.com/issue/KT-1447/Please-add-support-for-traditional-fori10-i32-i-32-loops)
 
-* [Why I can't apply value inside while loop?](https://discuss.kotlinlang.org/t/why-i-cant-apply-value-inside-while-loop/7762) 
+* [Kotlin Discussions - Why I can't apply value inside while loop?](https://discuss.kotlinlang.org/t/why-i-cant-apply-value-inside-while-loop/7762) 
 
 ## `if` proposal
 
-### Motivation 
+### Motivation for `if` 
 
 There are requests in the Kotlin community to add functionality to handle multiple variables that could potentially be `null` 
 (https://discuss.kotlinlang.org/t/feature-request-null-check-for-arguments-in-function-invoke/19838). 
@@ -307,7 +328,7 @@ if let name = name, let age = age {
 
 So a similar syntax in Koltin could be the following:
 
-### Proposed syntax
+### Proposed syntax of compound expressions in `if`
 
 ```kotlin
 if (val var1 = <expression1> ,val var2 = <expression2>, val varN = <expressionN>) {
@@ -315,7 +336,7 @@ if (val var1 = <expression1> ,val var2 = <expression2>, val varN = <expressionN>
 
 ```
 
-### Potential uses
+### Potential uses of compound expressions in `if`
 
 1. Smartcastes to types without `?`
 
@@ -359,7 +380,7 @@ if (val childAge = person.child?.age, childAge >= 6 && childAge < 18) {
 }
 ```
 
-### Benefits
+### Benefits of adding compound expressions in `if`
 
 1. **Enhanced Readability and Conciseness** This feature significantly 
 cleans up the code by reducing the need for nested let blocks or 
@@ -368,9 +389,10 @@ separate variable declarations and checks.
 2. **Better work with scopes** This feature allows you to better 
 manage variable visibility and not make variables visible where they are not needed.
 
-### List of discussions 
-* [Feature Request: Null Check for Arguments in Function Invoke](https://discuss.kotlinlang.org/t/feature-request-null-check-for-arguments-in-function-invoke/19838)
 
-* [Kotlin null check for multiple nullable var’s](https://discuss.kotlinlang.org/t/kotlin-null-check-for-multiple-nullable-vars/1946)
+### List of discussions related to compound expressions in `if` 
+* [Kotlin Discussions - Feature Request: Null Check for Arguments in Function Invoke](https://discuss.kotlinlang.org/t/feature-request-null-check-for-arguments-in-function-invoke/19838)
 
-* [Kotlin call function only if all arguments are not null](https://stackoverflow.com/questions/50742094/kotlin-call-function-only-if-all-arguments-are-not-null)
+* [Kotlin Discussions - Kotlin null check for multiple nullable var’s](https://discuss.kotlinlang.org/t/kotlin-null-check-for-multiple-nullable-vars/1946)
+
+* [StackOverflow - Kotlin call function only if all arguments are not null](https://stackoverflow.com/questions/50742094/kotlin-call-function-only-if-all-arguments-are-not-null)

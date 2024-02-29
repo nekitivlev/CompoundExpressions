@@ -2,7 +2,10 @@
 
 ## Abstract
 
-This proposal aims to add the ability to declare local variables directly in if and while condition expressions in Kotlin.
+After researching a large number of discussions/tickets/analogs in other languages 
+it was decided that most of the requested features already exist in Kotlin in one 
+form or another, so in this proposal we concentrated on adding compound expressions 
+to if and while statements.
 
 ## Table of contents
 - Abstract
@@ -61,6 +64,47 @@ inline fun <T> For(init: T, condition: (T) -> Boolean, increment: (T) -> T, body
     }
 }
 ```
+or this one:
+```kotlin
+private object BreakThrowable: Throwable() {
+    override fun fillInStackTrace(): Throwable = this // Good for performance
+}
+class BreakScope {
+    var isBroken: Boolean = false
+    	private set
+    
+    fun Break(): Nothing { 
+        isBroken = true 
+        throw BreakThrowable
+    }
+}
+
+inline fun <T> For(init: T, condition: (T) -> Boolean, increment: (T) -> T, body: BreakScope.(T) -> Unit) {
+    val scope = BreakScope()
+    var counter = init
+    while(condition(counter)) {
+        try {
+        	scope.body(counter)
+        } catch(e: BreakThrowable) {
+            if(scope.isBroken) // This is to support nested Fors, only the For that got cancelled will actually break
+                break
+            else
+                throw e
+        }
+        counter = increment(counter)
+    }
+}
+
+fun main() {
+    For(0, { it < 15 }, { it + 1 }) outer@{ i ->
+        For(1, { it < 256 }, { it * 2 }) inner@{ j -> 
+            println("$i, $j")
+            if((i + j) % 2 == 0) this@inner.Break() // should print only i+1 when i is odd and then increment i, when i is even, it should print j=1 and j=2
+            if(i * j == 12) this@outer.Break() // should break at i=12 and j=1 since that's the first i+j that is odd which happen to multiply to 12
+        }
+    }
+}
+```
 
 ### Benefits
 
@@ -110,9 +154,53 @@ for (val i = 0; i < numIterations; i++) {
 
 ### Drawbacks of adding "classic" `for`
 
-But as we can see the potential use of this feature looks a bit strange. There are 
-also people in the kotlin community who are against adding such a loop (https://youtrack.jetbrains.com/issue/KT-1447/Please-add-support-for-traditional-fori10-i32-i-32-loops).
+But as we can see the potential use of this feature looks a bit strange. 
+Also, when it comes to adding classical for for in Kotlin people specify as 
+potential uses some of the features associated with classical for from C, which are 
+also present in Kotlin, but require the use of specific syntax. 
+Among them:
 
+1. reverse loop:
+
+    example from C
+    ```C
+    for (int i = array.length - 1; i >= 0; --i) {
+        int element = array[i]
+        //...
+    }
+    ```
+
+    But we can do the same in Kotlin:
+
+    ```kotlin
+    for (i in array.length - 1 downTo 0) {
+        var element = array[i]
+        //...
+    }
+    ```
+
+2. The iteration with a step different from 1:
+
+    example from C:
+
+    ```C
+    for (int i = 0; i < array.length; i += 2) {
+        val element = array[i]
+        //...
+    }
+    ```
+
+    But we can do the same in Kotlin:
+
+    ```kotlin
+    for (i in array.indices step 2) {
+        val element = array[i]
+        //...
+    }
+    ```
+
+There are also people in the kotlin community who are against adding such a loop
+(https://youtrack.jetbrains.com/issue/KT-1447/Please-add-support-for-traditional-fori10-i32-i-32-loops).
 Also if you look at the specification of kotlin you may notice that the `for` loop 
 is essentially syntactic sugar and was not designed as what is proposed above 
 (https://kotlinlang.org/spec/statements.html#loop-statements). That's why we 
@@ -180,8 +268,11 @@ while (val data = api.loadData(page)) {
 
 ### Motivation 
 
-There are requests in the Kotlin community to add functionality to handle multiple variables that could potentially be `null` (https://discuss.kotlinlang.org/t/feature-request-null-check-for-arguments-in-function-invoke/19838). 
-We found it most promising and convenient to add the ability to declare local variables inside `if`.
+There are requests in the Kotlin community to add functionality to handle multiple variables that could potentially be `null` 
+(https://discuss.kotlinlang.org/t/feature-request-null-check-for-arguments-in-function-invoke/19838). 
+
+We found it most promising and convenient to add the ability to declare local variables inside 
+`if`.
 Since if a variable is mutable and accessible outside of a scope, the only way to ensure that it will not change is to make it local. 
 Even `?.let {}` for a single variable does this:
 
@@ -204,7 +295,8 @@ public final void test() {
 }
 ```
 
-Swift has a similar problem with null checking multiple vars and solves this by making it easy to declare local values within if statements:
+Swift has a similar problem with null checking multiple vars and solves this by making it easy 
+to declare local values within if statements:
 
 ```swift
 // Swift code 
@@ -269,12 +361,16 @@ if (val childAge = person.child?.age, childAge >= 6 && childAge < 18) {
 
 ### Benefits
 
-1. **Enhanced Readability and Conciseness** This feature significantly cleans up the code by reducing the need for nested let blocks or separate variable declarations and checks. 
+1. **Enhanced Readability and Conciseness** This feature significantly 
+cleans up the code by reducing the need for nested let blocks or 
+separate variable declarations and checks. 
 
-2. **Better work with scopes** This feature allows you to better manage variable visibility and not make variables visible where they are not needed.
+2. **Better work with scopes** This feature allows you to better 
+manage variable visibility and not make variables visible where they are not needed.
 
 ### List of discussions 
 * [Feature Request: Null Check for Arguments in Function Invoke](https://discuss.kotlinlang.org/t/feature-request-null-check-for-arguments-in-function-invoke/19838)
 
 * [Kotlin null check for multiple nullable var’s](https://discuss.kotlinlang.org/t/kotlin-null-check-for-multiple-nullable-vars/1946)
 
+* [Kotlin call function only if all arguments are not null](https://stackoverflow.com/questions/50742094/kotlin-call-function-only-if-all-arguments-are-not-null)

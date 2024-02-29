@@ -550,7 +550,7 @@ if (val child = person as? Child, val car = child.favouriteToy as? Car) {
 }
 ```
 
-A additional improvement that could be made which is also available in swift is 
+An additional improvement that could be made which is also available in swift is 
 allowing boolean expressions alongside the nullable expressions. It’s a fairly 
 common use case to check if something is non-null and then perform an additional 
 check to see if it is appropriate to use.
@@ -564,13 +564,13 @@ if (val childAge = person.child?.age, childAge >= 6 && childAge < 18) {
 ### Benefits of adding compound expressions in `if`
 
 1. **Enhanced Code Clarity:** Directly declaring variables within `if` 
-conditions leads to cleaner, more understandable code.
+conditions lead to cleaner, more understandable code.
 
 2. **Reduced Boilerplate:** Eliminates the need for nested `let` blocks or 
 separate variable checks, streamlining null handling.
 
 3. **Improved Safety and Consistency:** Localizing variable declarations 
-within `if` conditions ensures immutability and reduces the risk of 
+within `if` conditions ensure immutability and reduces the risk of 
 unintended side effects, aligning with Kotlin's emphasis on safety and 
 predictability.
 

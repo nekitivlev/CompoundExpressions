@@ -6,7 +6,7 @@ Upon thorough investigation of community discussions, tickets, and
 analogous constructs in other programming languages, it has been 
 determined that many of the requested features are already present in 
 Kotlin, albeit in different forms. Therefore, this proposal 
-concentrates on introducing compound expressions to if and while 
+concentrates on introducing compound expressions to `if` and `while` 
 statements, as these areas appear to be the most beneficial and 
 promising for the application of compound expressions in Kotlin.
 

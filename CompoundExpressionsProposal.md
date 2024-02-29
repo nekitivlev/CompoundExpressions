@@ -13,8 +13,8 @@ promising for the application of compound expressions in Kotlin.
 ## Table of contents
 - [Abstract](#abstract)
 - [Table of contents](#table-of-contents) 
-- [`while` proposal](#while-proposal)
-    - [Motivation for `while`](#motivation-for-while)
+- [Adding compound expressions in `while` proposal](#adding-compound-expressions-in-while-proposal)
+    - [Motivation of adding compound expressions in `while`](#motivation-of-adding-compound-expressions-in-while)
         - [Benefits of adding "classic" `for`](#benefits-of-adding-classic-for)
         - [Proposed syntax of "classic" `for`](#proposed-syntax-of-classic-for)
         - [Potential uses of "classic" `for`](#potential-uses-of-classic-for)
@@ -24,21 +24,21 @@ promising for the application of compound expressions in Kotlin.
     - [Benefits of adding compound expressions in `while`](#benefits-of-adding-compound-expressions-in-while)
     - [List of discussions related to compound expressions in `while`](#list-of-discussions-related-to-compound-expressions-in-while)
 
-- [`if` proposal](#if-proposal)
-    - [Motivation for `if`](#motivation-for-if)
+- [Adding compound expressions in `if` proposal](#adding-compound-expressions-in-if-proposal)
+    - [Motivation of adding compound expressions in `if`](#motivation-of-adding-compound-expressions-in-if)
     - [Proposed syntax of compound expressions in `if`](#proposed-syntax-of-compound-expressions-in-if)
     - [Potential uses of compound expressions in `if`](#potential-uses-of-compound-expressions-in-if)
     - [Benefits of adding compound expressions in `if`](#benefits-of-adding-compound-expressions-in-if)
     - [List of discussions related to compound expressions in `if`](#list-of-discussions-related-to-compound-expressions-in-if)
 
-## `while` proposal
+## Adding compound expressions in `while` proposal
 
-### Motivation for `while`
+### Motivation of adding compound expressions in `while`
 
 There are many requests in the kotlin community to add a "classic" `for` loop. 
 This is confirmed by the number of threads on discuss.kotlinlang.org devoted to it 
 and by the presence of not a small number of self-written classics like this one:
-[Kotlin Discussions](https://discuss.kotlinlang.org/t/any-reason-to-not-keep-the-good-old-for-loop-format/25287/20)
+([Kotlin Discussions](https://discuss.kotlinlang.org/t/any-reason-to-not-keep-the-good-old-for-loop-format/25287/20))
 
 ```kotlin
 fun main() {
@@ -286,9 +286,9 @@ while (val data = api.loadData(page)) {
 
 * [Kotlin Discussions - Why I can't apply value inside while loop?](https://discuss.kotlinlang.org/t/why-i-cant-apply-value-inside-while-loop/7762) 
 
-## `if` proposal
+## Adding compound expressions in `if` proposal
 
-### Motivation for `if` 
+### Motivation of adding compound expressions in `if`
 Kotlin prides itself on null safety, but the current mechanisms for 
 dealing with multiple nullable variables can sometimes lead to less 
 clean code and an increase in boilerplate. For instance, when calling 

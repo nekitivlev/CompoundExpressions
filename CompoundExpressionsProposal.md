@@ -231,7 +231,7 @@ Among them:
 
     ```C
     for (int i = 0; i < array.length; i += 2) {
-        val element = array[i]
+        int element = array[i]
         //...
     }
     ```

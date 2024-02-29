@@ -113,6 +113,7 @@ or this one:
 private object BreakThrowable: Throwable() {
     override fun fillInStackTrace(): Throwable = this // Good for performance
 }
+
 class BreakScope {
     var isBroken: Boolean = false
     	private set
@@ -362,8 +363,10 @@ This approach, while functional, introduces additional complexity and verbosity,
     }
     
     fun Pair<String?, Int?>.let(action: (pair: Pair<String?, Int?>) -> Unit) {
+
         if (this.first != null && this.second != null)
             action(this)
+
     }
     ```
 
@@ -380,15 +383,21 @@ This approach, while functional, introduces additional complexity and verbosity,
 
     ```kotlin
     inline fun <A, B, R> ifNotNull(a: A?, b: B?, code: (A, B) -> R) {
+
         if (a != null && b != null) {
+
             code(a, b)
+
         }
+    
     }
 
     fun test() {
+
         ifNotNull(name, age) { name, age ->
           doSth(name, age)
         }
+
     }
     ```
 
@@ -474,6 +483,7 @@ if (val var1 = <expression1> ,val var2 = <expression2>, val varN = <expressionN>
 }
 
 ```
+
 This syntax proposes a straightforward method for declaring and 
 checking multiple variables within a single if condition, aiming to 
 reduce verbosity and enhance code readability. 
@@ -508,6 +518,7 @@ But there are also other suggestions for adding similar functionality, such as:
     syntax, potentially hindering readability.
 
 Taking into account everything described above, it was decided that the best option is the option described at the very beginning of this part, namely:
+
 ```kotlin
 if (val var1 = <expression1> ,val var2 = <expression2>, val varN = <expressionN>, var1 != null, var2 !=null, varN != null) {
 }

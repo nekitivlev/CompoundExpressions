@@ -11,34 +11,57 @@ statements, as these areas appear to be the most beneficial and
 promising for the application of compound expressions in Kotlin.
 
 ## Table of contents
+
+
 - [Abstract](#abstract)
+
+
 - [Table of contents](#table-of-contents) 
+
+
 - [Adding compound expressions in `while` proposal](#adding-compound-expressions-in-while-proposal)
+
     - [Motivation of adding compound expressions in `while`](#motivation-of-adding-compound-expressions-in-while)
+
         - [Benefits of adding "classic" `for`](#benefits-of-adding-classic-for)
+
         - [Proposed syntax of "classic" `for`](#proposed-syntax-of-classic-for)
+
         - [Potential uses of "classic" `for`](#potential-uses-of-classic-for)
+
         - [Drawbacks of adding "classic" `for`](#drawbacks-of-adding-classic-for)
+
     - [Proposed syntax of compound expressions in `while`](#proposed-syntax-of-compound-expressions-in-while)
+
     - [Potential uses of compound expressions in `while`](#potential-uses-of-compound-expressions-in-while)
+
     - [Benefits of adding compound expressions in `while`](#benefits-of-adding-compound-expressions-in-while)
+
     - [List of discussions related to compound expressions in `while`](#list-of-discussions-related-to-compound-expressions-in-while)
 
+
 - [Adding compound expressions in `if` proposal](#adding-compound-expressions-in-if-proposal)
+
     - [Motivation of adding compound expressions in `if`](#motivation-of-adding-compound-expressions-in-if)
+
     - [Proposed syntax of compound expressions in `if`](#proposed-syntax-of-compound-expressions-in-if)
+
     - [Potential uses of compound expressions in `if`](#potential-uses-of-compound-expressions-in-if)
+
     - [Benefits of adding compound expressions in `if`](#benefits-of-adding-compound-expressions-in-if)
+
     - [List of discussions related to compound expressions in `if`](#list-of-discussions-related-to-compound-expressions-in-if)
 
 ## Adding compound expressions in `while` proposal
 
 ### Motivation of adding compound expressions in `while`
 
-There are many requests in the kotlin community to add a "classic" `for` loop. 
-This is confirmed by the number of threads on discuss.kotlinlang.org devoted to it 
-and by the presence of not a small number of self-written classics like this one:
-([Kotlin Discussions](https://discuss.kotlinlang.org/t/any-reason-to-not-keep-the-good-old-for-loop-format/25287/20))
+The Kotlin community has consistently shown an appetite for more 
+versatile looping constructs, reminiscent of the "classic" for loop 
+seen in other programming languages. This interest is evident from 
+numerous discussions and custom implementations shared across Kotlin 
+forums, such as this detailed example shared on
+[Kotlin Discussions](https://discuss.kotlinlang.org/t/any-reason-to-not-keep-the-good-old-for-loop-format/25287/20)
 
 ```kotlin
 fun main() {
@@ -150,6 +173,7 @@ for (val i = 0; i < numIterations; i++) {
 ```
 
 ### Potential uses of "classic" `for`
+
 1. Сhanging iteration boundaries while traversing a loop 
 
     [Kotlin Discussions](https://discuss.kotlinlang.org/t/for-loop-with-dynamic-condition/57)
@@ -433,7 +457,45 @@ if (val var1 = <expression1> ,val var2 = <expression2>, val varN = <expressionN>
 }
 
 ```
+This syntax proposes a straightforward method for declaring and 
+checking multiple variables within a single if condition, aiming to 
+reduce verbosity and enhance code readability. 
+But there are also other suggestions for adding similar functionality, such as:
+1. **Extended Safe Call Operator `(?.)`**
 
+    **Description:** 
+    Enhance the safe call operator to allow conditional function execution 
+    based on the nullability of arguments, simplifying null checks within 
+    function calls.
+
+    **Example:**
+    ```kotlin
+    val result = someFunction(a?, b, c?)
+    ```
+
+    **Drawback:** Introduces syntax complexity and potential for    
+    oversight, complicating the readability.
+
+2. **Shortcut for Local Variable Declarations `(@localVal)`**
+    
+    **Description:**
+    A shortcut for declaring and checking nullability of local      
+    variables within conditions, aiming to reduce boilerplate code.
+
+    **Example:**
+    ```kotlin
+    if (@localVal name != null && @localVal age != null) { ... }
+    ```
+
+    **Drawbacks:** Adds ambiguity and complexity to the language's 
+    syntax, potentially hindering readability.
+
+Taking into account everything described above, it was decided that the best option is the option described at the very beginning of this part, namely:
+```kotlin
+if (val var1 = <expression1> ,val var2 = <expression2>, val varN = <expressionN>) {
+}
+
+```
 ### Potential uses of compound expressions in `if`
 
 1. **Direct Smart Casts for Nullable Types** ([Kotlin Discussions](https://discuss.kotlinlang.org/t/kotlin-null-check-for-multiple-nullable-vars/1946/22))

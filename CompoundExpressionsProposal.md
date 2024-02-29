@@ -249,7 +249,7 @@ There are also people in the kotlin community who are against adding such a loop
 [KT-1447](https://youtrack.jetbrains.com/issue/KT-1447/Please-add-support-for-traditional-fori10-i32-i-32-loops).
 Also if you look at the specification of kotlin you may notice that the `for` loop 
 is essentially syntactic sugar and was not designed as what is proposed above 
-[Kotlin Specifaction](https://kotlinlang.org/spec/statements.html#loop-statements). That's why we 
+[Kotlin Specifaction](https://kotlinlang.org/spec/statements.tml#loop-statements). That's why we 
 decided that it's better to add the possibility of declaring local variables in the
 `while` loop, because the `for` loop is intended only for iteration, and for 
 everything else there is a `while` loop and all the examples above can be easily 
@@ -270,8 +270,7 @@ while (val var1 = <expression1> ,val var2 = <expression2>, val varN = <expressio
 
 In cases where the data comes from a stream (such as a file stream or 
 network connection) and you want to continue processing while the 
-stream is open and accessible. ([Kotlin Discussions]) (https://discuss.
-kotlinlang.org/t/why-i-cant-apply-value-inside-while-loop/7762)
+stream is open and accessible. ([Kotlin Discussions](https://discuss.kotlinlang.org/t/why-i-cant-apply-value-inside-while-loop/7762))
 
 ```kotlin
 val buffer = ByteArray(8192)

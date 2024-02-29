@@ -454,6 +454,17 @@ if let name = name, let age = age {
 }
 ```
 
+There is also a similar design in go to solve the same problem: 
+
+```Go
+// Go code
+if result := someFunction(); result != nil {
+    // cases where result non equal nil
+} else {
+    // cases where result eqaul nil
+}
+```
+
 So a similar syntax in Koltin could be the following:
 
 ### Proposed syntax of compound expressions in `if`

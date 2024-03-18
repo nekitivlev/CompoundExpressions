@@ -517,6 +517,21 @@ But there are also other suggestions for adding similar functionality, such as:
     **Drawbacks:** Adds ambiguity and complexity to the language's 
     syntax, potentially hindering readability.
 
+3. **Multilet adding**
+
+    **Description:**
+    New syntactic construct multilet which makes it possible to use let-function with several variables. 
+
+    **Example:**
+    ```kotlin
+    multilet (a, b, c) { nonNullA, nonNullB, nonNullC ->
+    // Code executed if a, b and c are not null
+    }
+    ```
+
+    **Drawbacks:**
+    Adding such a feature requires more effort, and there is no direct request to add it among the kotlin community.
+
 Taking into account everything described above, it was decided that the best option is the option described at the very beginning of this part, namely:
 
 ```kotlin
@@ -524,6 +539,25 @@ if (val var1 = <expression1> ,val var2 = <expression2>, val varN = <expressionN>
 }
 
 ```
+
+Also adding compound assignments to an `if` does not affect the CFG of 
+the code that contains the `if`. So the whole difference in terms of 
+data flow is that in case of using compound assignments in if will 
+lead to narrowing the scope of variables that will be declared using 
+compound assignments.
+
+At the same time, adding this feature has an impact on `null-safety`:
+the variables initialized in the compound assignment have a limited 
+scope. They exist only within the confines of the `if` block, 
+preventing any null-related issues outside of the block and avoiding 
+the misuse of potentially nullable variables.
+
+Also it has impact on `Smart Casts`: Smart casts following a compound 
+assignment offer improved type safety. Since the variables are only 
+accessible within the `if` block after passing the null checks, the 
+compiler can guarantee their types, avoiding the potential for 
+type-related errors.
+
 ### Potential uses of compound expressions in `if`
 
 1. **Direct Smart Casts for Nullable Types** ([Kotlin Discussions](https://discuss.kotlinlang.org/t/kotlin-null-check-for-multiple-nullable-vars/1946/22))

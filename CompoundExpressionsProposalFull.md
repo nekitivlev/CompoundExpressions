@@ -503,3 +503,283 @@ The benefit in general is that you can use earlier values in later expressions. 
 directly. And because the expressions can be anything that returns a nullable type they
 can also be used with safe-casts.
 
+```kotlin
+if (val child = person as? Child; val car = child.favouriteToy as? Car;
+    child != null && car != null) {
+    car.race()
+    print("$child is racing their toy $car")
+}
+```
+
+<div style="text-align: center; margin-top: 5px;">
+    <em><d name="listing-20">Listing 20:</d> Safe casts example with <code>if</code> with compound expressions</em>
+</div>
+
+On the [listing 20](#listing-20), we consider the example of using safe-casts with compound expres-
+sions in the ```if``` statement. In the example, the variables are checked for conformity to the
+required type, and if the type is correct and non-```null```, the body of if is executed. This is
+a fairly common use case to check if something is non-```null``` and then perform an additional
+check to see if it is appropriate to use it.
+
+So we can see that adding compound expressions to an if statement will have an impact
+on safe casts. Safe casts following a compound assignment offer improved type safety.
+Since the variables are only accessible within the ```if``` body after passing the null checks,
+the compiler can guarantee their types, avoiding the potential for type-related errors.
+
+We would also like to point out that adding compound expressions to an ```if``` statement will
+reduce the amount of boilerplate code in cases like this [one](#listing-13) since it eliminates the
+need to use nested let blocks or separate individual variable checks.
+
+In light of the previously listed benefits of adding compound expressions to the ```if``` statement, we think it is appropriate to add compound expressions to [the ```if``` statement in the form we have proposed](#listing-18).
+
+### ```when```
+
+Now let’s turn our attention to the ```when``` statement. After studying the Kotlin compiler, we learned that ```if``` is syntactic sugar over ```when```.
+
+Compared to ```if```, ```when``` does not have as many counterparts with compound expressions.
+But there is still an [example](#listing-4) (```switch``` is the analog of when in C++). We also managed
+to find a [request on youtrack](https://youtrack.jetbrains.com/issue/KT-25698) that suggests adding the ability to declare variables
+inside ```when``` parentheses, similar to what [we suggested for ```if```](#listing-18).
+
+```kotlin
+when (val x = a.foo(); bar(a, x)) {
+    is Case1 -> doStuff1(a, x)
+    is Case2 -> doStuff2(a, x)
+}
+```
+
+<div style="text-align: center; margin-top: 5px;">
+    <em><d name="listing-21">Listing 21:</d> <code>when</code> with compound variable initialization</em>
+</div>
+
+```kotlin
+when (val x = a.foo() as? buz; val y = b.foo() as? buz; x != null && y != null) {
+    true -> doStuff1(y, x)
+    else -> doStuff2(y, x)
+}
+```
+
+<div style="text-align: center; margin-top: 5px;">
+    <em><d name="listing-22">Listing 22:</d> <code>when</code> with compound variable initialization and null</em>
+</div>
+
+On the [listing 21](#lising-21), we’re looking at an example of a compound expression in a ```when``` statement. Here, like in C++, a variable is initialized first, followed by an expression that will
+influence the choice of one or another branch within ```when```.
+
+We think this is a good example of where compound expressions can be used because
+it has the same advantages as adding compound expressions to ```if```.
+
+On the [listing 22](#listing-22), we consider the example of using safe casts with compound expressions in the ```when``` statement. In the example, the variables are checked for conformity to
+the required type, and after that, if the type is correct and non-```null```, the ```true``` branch is
+executed, otherwise ```false```.
+
+Thus, incorporating compound expressions into the ```when``` statement can enhance type
+safety by ensuring that variables are accessible within the ```when``` body only after successful
+```null``` checks. Also, adding compound expressions to ```when``` will make working with nullable
+variables better because if they are declared inside ```when``` statements, their parentheses
+will be restricted to those parentheses.
+
+In light of all these benefits, we propose our prototype ```when``` with compound expressions.
+
+```kotlin
+when (val val1 = <expression1>; ... ;val valN = <expressionN>;<when_expression>) {
+
+}
+```
+<div style="text-align: center; margin-top: 5px;">
+    <em><d name="listing-23">Listing 23:</d> Proposed syntax of <code>when</code> statement</em>
+</div>
+
+On the [listing 23](#listing-23), we consider our prototype syntax. Now it will be possible to declare
+variables before declaring a condition that is checked in ```when```. Declarations of different
+variables are separated by semicolons. At the end of the expression in brackets must be
+a condition, according to which the ```when``` branches will be selected.
+
+### ```for```
+
+A ```for```-loop is a type of loop specifically designed to iterate over collections or any iter-
+able sequence of elements. It includes an iteration variable, a container expression that
+provides the elements, and a loop body that executes each element in [the iterable](https://kotlinlang.org/spec/statements.html#loop-statements).
+
+The ```for```-loop is a syntactic construct that can be overloaded, expanding as follows:
+
+```kotlin
+when(val $iterator = C.iterator()) {
+    else -> while ($iterator.hasNext()) {
+            val VarDecl = __iterator.next()
+            <... all the statements from Body>
+    }
+}
+```
+
+<div style="text-align: center; margin-top: 5px;">
+    <em><d name="listing-24">Listing 24:</d> <code>for</code>-loop expanding</em>
+</div>
+
+On the [listing 24](#listing-24), we consider expansion of ```for(VarDecl in C)``` Body. It is the same as
+[24](#listing-24) where ```iterator```, ```hasNext```, ```next``` are all suitable operator functions available in the
+current scope. ```VarDecl``` here may be a variable name or set of variables.
+
+As you can see from the examples ([2](#listing-2), [8](#listing-8), [5](#listing-5)), classic ```for``` loop is quite
+common among modern programming languages. Also, the fact that people are inventing
+their own implementations using the existing [syntax](#listing-10) and creating various discussions
+related to adding the classic ```for``` loop to Kotlin shows that this idea is quite popular in the
+Kotlin community ([Discuss.kotlinlang.org. for loop with dynamic condition](https://discuss.kotlinlang.org/t/for-loop-with-dynamic-condition/57), [Discuss.kotlinlang.org. For-loop dynamic step](https://discuss.kotlinlang.org/t/for-loop-dynamic-step/6429), [youtrack. KT-1447. Please add support for traditional for](https://youtrack.jetbrains.com/issue/KT-1447/Please-add-support-for-traditional-fori10-i32-i-32-loops), [Discuss.kotlinlang.org: Community’s Realization of Classic For in Kotlin with Exist-
+ing Code Features](https://discuss.kotlinlang.org/t/any-reason-to-not-keep-the-good-old-for-loop-format/25287/20)).
+
+The traditional ```for``` loop, which can be found in such languages as [Java](#listing-5), [C++](#listing-2),
+and C, offers syntax that is familiar to many programmers. It provides clean and concise
+iteration across a range of values, with the ability to easily change the loop’s index variable
+and conditionally control loop execution. Familiarity and ease of use make it an attractive
+feature for many developers switching to Kotlin from other languages.
+
+Let’s look at an example of what a classic ```for``` loop might look like in Kotlin.
+
+```kotlin
+for (val i = 0; i < numIterations; i++) {
+// loop-body
+}
+```
+
+<div style="text-align: center; margin-top: 5px;">
+    <em><d name="listing-25">Listing 25:</d> Proposed syntax of classic <code>for</code> loop in Kotlin</em>
+</div>
+
+On the [listing 25](#listing-25), we are looking at what a classic ```for``` loop in Kotlin might look like. The
+variable that is created for iteration, in this case, ```i```, cannot be changed inside the loop
+body, but it is changed according to the rule described at the end of the expression written
+in brackets in ```for``` (in this example, ```i++```). Also in the center, it records the condition when
+the loop exits (in this example, ```i < numIterations```).
+
+Let’s consider potential use cases for this syntax.
+
+```kotlin
+for (val i = 0; i < numIterations; i++) {
+    print(text.charAt(i))
+    if (someCondition()) {
+        numIterations=numIterations-1
+    }
+}
+```
+
+<div style="text-align: center; margin-top: 5px;">
+    <em><d name="listing-26">Listing 26:</d> Changing iteration boundaries while traversing a loop example</em>
+</div>
+
+On the [listing 26](#listing-26), we consider an example of using the classic for proposed on [the
+discuss.kotlinlang.org](https://discuss.kotlinlang.org/t/for-loop-with-dynamic-condition/57). In this example, the right border of the segment along which the variable is iterated is changed. This is not possible at the moment because the boundaries along which the iteration is performed are created when creating for
+and are not changed further [24](#listing-24). Although this example looks quite convincing, we don’t
+think it is a good practice to write such code because, even with such a simple example,
+it is quite difficult to predict the program’s behavior because it is not always obvious at
+which step the loop will be exited. Writing such constructs also complicates finding errors
+in the program. It is also important to note that this example can be rewritten using ```while```
+in the current Kotlin syntax.
+
+```kotlin
+var i = 0
+while(i < numIterations){
+    print(text.charAt(i))
+    if (someCondition()) {
+        numIterations=numIterations-1
+    }
+}
+```
+
+<div style="text-align: center; margin-top: 5px;">
+    <em><d name="listing-27">Listing 27:</d> changing iteration boundaries while traversing a loop example</em>
+</div>
+
+On the [listing 27](#listing-27), we consider a workaround of the previously discussed example of the
+usage of classic ```for```. The disadvantages of this workaround are that the ```i``` variable is
+visible outside ```while```, and it can also be changed inside the ```while``` body (all this adds
+unnecessary uncertainty in program execution). Also, separating the declaration and the
+rules by which the variable we are iterating on changes makes the code less readable.
+
+Let’s look at another example.
+
+```kotlin
+for(val i = 0; i < 500; i+= (if (i < 40) 10 else 20)) {
+    println("Now at $i")
+}
+```
+
+<div style="text-align: center; margin-top: 5px;">
+    <em><d name="listing-28">Listing 28:</d> Dynamically changing the step while iterating through a loop</em>
+</div>
+
+On the [listing 28](#listing-28), we consider an example of using the classic ```for``` proposed on the
+[discuss.kotlinlang.org](https://discuss.kotlinlang.org/t/for-loop-dynamic-step/6429). In this example, the variable being iterated over can
+be changed by 10 or 20, depending on its value. This example shows how much more
+flexible the classic ```for``` loop can be. Despite this, we believe that writing such constructs
+negatively affects code readability and complicates it. It is also important to note that this
+example can be rewritten quite easily using ```while``` in the current Kotlin syntax.
+
+```kotlin
+var i = 0
+while( i < 500 ){
+    println("Now at $i")
+    i += if( i < 40 ) 10 else 20
+}
+```
+
+<div style="text-align: center; margin-top: 5px;">
+    <em><d name="listing-29">Listing 29:</d> Dynamically changing the step while iterating through a loop</em>
+</div>
+
+On the [listing 29](#listing-29), we consider a workaround of the previously discussed example of the
+usage of classic ```for```. The disadvantages of this workaround are that the ```i``` variable is
+visible outside ```while```, and it can also be changed inside the ```while``` body (all this adds unnecessary uncertainty in program execution). Also, separating the declaration and the
+rules by which the variable we are iterating on changes makes the code less readable. 
+
+Thus, it turns out that adding the classical ```for``` can improve code readability since its use
+reduces the need for external initialization and update operators, encapsulating all logic
+related to the loop in the ```for``` statement. Also, declaring a variable inside ```for``` allows you
+to restrict its scope, which is also useful because it helps you avoid naming conflicts.
+
+Despite all the benefits of adding classic ```for``` in Kotlin described earlier, the important fact
+remains that the ```for``` loop in Kotlin was originally consciously [designed only as ```forEach```](https://kotlinlang.org/spec/statements.html#loop-statements), so we think that adding compound expressions to the ```for``` loop, as proposed, makes
+no sense because it violates language design.
+
+### ```while```
+
+Now let’s look at the ```while``` loop. The ```while``` loop is a basic loop that is used in Kotlin. It
+is assumed to be used whenever we need a loop, except for iterations, since ```for``` exists
+for them. Therefore, we think that adding compound expressions to ```while``` does not
+contradict Kotlin’s language design, which is already a big plus compared to ```for```.
+
+Let’s take a look at an example we managed to find during our research.
+
+```kotlin
+val buffer = ByteArray(8192)
+val bytesRead : Int
+val byteArrayOutputStream = ByteArrayOutputStream()
+val inputStream = FileInputStream(file)
+while(val byteRead = inputStream.read(buffer); byteRead != -1){
+
+}
+```
+
+<div style="text-align: center; margin-top: 5px;">
+    <em><d name="listing-30">Listing 30:</d> streaming data processing with <code>while</code> loop example</em>
+</div>
+
+On the [listing 30](#listing-30), we consider an example of a ```while``` loop with compound variable initialization. This variable cannot be changed inside the ```while``` body. But it can be changed
+between its iterations. The first question that arises in the case of adding such a feature.
+The variable that is initialized in parentheses ```while``` loop is created once or must be created anew every iteration of the loop. This is a rather complicated question for which we
+do not have any arguments, either for one side or the other. While this example looks
+quite interesting, it is easily rewritten using existing syntax.
+
+```kotlin
+val buffer = ByteArray(8192)
+val bytesRead : Int
+val byteArrayOutputStream = ByteArrayOutputStream()
+val inputStream = FileInputStream(file)
+do{
+    val bytesRead = inputStream.read(buffer)
+} while(byteRead != -1)
+```
+
+<div style="text-align: center; margin-top: 5px;">
+    <em><d name="listing-31">Listing 31:</d> workaround for the example 30</em>
+</div>
+

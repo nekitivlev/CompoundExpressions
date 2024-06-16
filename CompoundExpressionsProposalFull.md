@@ -783,3 +783,100 @@ do{
     <em><d name="listing-31">Listing 31:</d> workaround for the example 30</em>
 </div>
 
+## Prototypes implemenation
+
+After studying the K2 compiler code, we came to the conclusion that the previously described prototypes for ```when``` and ```if``` can be implemented in two different ways: as syntactic sugar that will be resolved during ```RAW_FIR``` tree construction or by adding variables from the init block to the corresponding scope during ```IR``` tree construction.
+
+### Implementation as syntactic sugar
+The work on this prototype mainly affects the desugaring stage along
+with changes in the parser. The implemented prototype can be found in the corresponding
+[branch of the GitHub repository] (TODO(): link-here).
+#### ```if``` prototype
+We decided that a good option would be to make a prototype ```if``` with a compound expression syntactic sugar on ```run``` function and an ordinary ```if```.
+This means that the ```if``` with compound expressions will be desugared into a ```run```, which
+will first declare all the variables we write in the parentheses of our ```if``` with compound
+expressions, and then will be followed by an ordinary ```if``` with condition check from our ```if```
+with compound expressions.
+
+```kotlin
+run{
+    val val1 = <expression1>
+    ...
+    val valN = <expressionN>
+    if(<if expressions>){
+
+    }
+}
+```
+
+<div style="text-align: center; margin-top: 5px;">
+    <em><d name="listing-32">Listing 32:</d> desugared <code>if</code> prototype</em>
+</div>
+
+On the [listing 32](#listing-32), we can see what will be the desugared [prototype we talked about](#listing-18)
+earlier. We decided to do it this way because in this case, the scoping of variables declared inside ```if``` with compound expressions will really correspond to the scope of the ```if```.
+
+##### Changes in parser
+For the parser part, the needed changes was to modify ```kotlin.compiler.psi.main.KotlinExpressionParsing.parseIf()``` function, which parse ```if``` statement. A necessary change is to add the ability to declare variables inside an ```if``` statement, and turn it into ```COMPOUND_EXPRESSION``` in case variables are declared. 
+
+##### Changes in the ```RAF_FIR``` tree building
+
+Since in the case of compiling ```if``` with compound expressions, we want to get a ```run```
+scope function inside which variables and classic ```if``` will be declared. So the construction of ```RAW_FIR``` tree containing ```if``` with compound expressions will start with the call of
+```convertCallExpression``` function inside ```LightTreeRawFirExpressionBuilder```. Here we
+have made the necessary code modifications to build a tree corresponding to the run
+scope function.
+
+We also wrote our own function inside ```LightTreeRawFirExpressionBuilder``` responsible for constructing the anonymous function, which contains a block containing all the
+variables declared with compound expression and our control flow statement.
+
+Thus, the resulting prototype is an emulation of a ```run``` function containing variables and a
+control flow statement declared with compound expressions.
+
+#### ```when``` prototype
+
+We decided that a good option would be to make a prototype when with a compound expression syntactic sugar on run function and an ordinary when.
+This means that the ```when``` with compound expressions will be desugared into a ```run```, which
+will first declare all the variables we write in the parentheses of our ```when``` with compound expressions, and then will be followed by an ordinary ```when``` with a condition check from
+our ```when``` with compound expressions.
+
+```kotlin
+run{
+    val val1 = <expression1>
+    ...
+    val valN = <expressionN>
+    when(<if expressions>){
+
+    }
+}
+```
+
+<div style="text-align: center; margin-top: 5px;">
+    <em><d name="listing-33">Listing 32:</d> desugared <code>when</code> prototype</em>
+</div>
+
+On the [listing 33](#listing-33), we can see what will be the desugared [prototype we talked about](#listing-23)
+earlier. We decided to do it this way because, in this case, the scoping of variables
+declared inside ```when``` with compound expressions will really correspond to the scope of
+the ```when```.
+
+##### Changes in parser
+We modified this function in a similar way as we did for ```if``` statement. Thus, we do
+not change the PSI tree that is built if the parser receives an ordinary when statement as
+input, but if the parser receives a ```when``` statement with compound expressions as input,
+then in addition to the variables declared inside the ```when``` statement with compound expressions, the following nodes will be added: ```CALL_EXPRESSION```, ```COMPOUND_EXPRESSION```,
+```COMPOUND_EXPRESSION```, ```BLOCK```. As in the case of the ```if``` statement with compound expressions.
+##### Changes in the ```RAF_FIR``` tree building
+
+Since in the case of parsing when with compound expressions our tree contains nodes
+```CALL_EXPRESSION```, ```COMPOUND_EXPRESSION```, ```COMPOUND_EXPRESSION```, ```BLOCK```, all the same actions will take place before entering the ```convertCompoundExpression``` function as they
+did when building the tree by if with compound expressions. In order to add support
+for when with compound expressions, we simply added a check inside the ```convertCompoundExpression``` function to see which node was passed to us as the control flow
+statement node, depending on this, either when or if will be added to our anonymous
+function. Thus we added support for compound expressions in the ```when``` statement.
+
+### implemenatinon by adding variables from the init block to the corresponding scope during  ```IR``` tree construction
+
+The work on this prototype mainly affects the parser, desugaring stage, IR tree building stage. The implemented prototype can be found in [the corresponding
+branch of the GitHub repository](https://github.com/nekitivlev/kotlin/tree/when_with_multiple_arguments_resolution).
+

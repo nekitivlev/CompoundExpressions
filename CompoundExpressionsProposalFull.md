@@ -927,7 +927,7 @@ There is results.
 
 | case                  | compilation time | run time |
 |-----------------------|------------------|----------|
-| [first prototype](#implementation-as-syntactic-sugar) (```when```) | 2. 00356 s       | 0.0529 s| 
+| [first prototype](#implementation-as-syntactic-sugar) (```when```) | 2.00356 s       | 0.0529 s| 
 | [first prototype](#implementation-as-syntactic-sugar) (```if```)   | 2.0085 s | 0.052 s|
 | [second prototype](#implemenatinon-by-adding-variables-from-the-init-block-to-the-corresponding-scope-during--ir-tree-construction) (```when```) | 1.955 s | 0.05077 s |
 | [second prototype](#implemenatinon-by-adding-variables-from-the-init-block-to-the-corresponding-scope-during--ir-tree-construction) (```if```) | 1.987 s | 0.05069 s |

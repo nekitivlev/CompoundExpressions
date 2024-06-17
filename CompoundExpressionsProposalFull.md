@@ -790,7 +790,7 @@ After studying the K2 compiler code, we came to the conclusion that the previous
 ### Implementation as syntactic sugar
 The work on this prototype mainly affects the desugaring stage along
 with changes in the parser. The implemented prototype can be found in the corresponding
-[branch of the GitHub repository] (TODO(): link-here).
+[branch of the GitHub repository](https://github.com/nekitivlev/kotlin/tree/syntax_sugar_prototype).
 #### ```if``` prototype
 We decided that a good option would be to make a prototype ```if``` with a compound expression syntactic sugar on ```run``` function and an ordinary ```if```.
 This means that the ```if``` with compound expressions will be desugared into a ```run```, which
@@ -880,3 +880,61 @@ function. Thus we added support for compound expressions in the ```when``` state
 The work on this prototype mainly affects the parser, desugaring stage, IR tree building stage. The implemented prototype can be found in [the corresponding
 branch of the GitHub repository](https://github.com/nekitivlev/kotlin/tree/when_with_multiple_arguments_resolution).
 
+#### Changes in parser 
+
+##### ```if```
+
+For the parser part, the needed changes was to modify ```kotlin.compiler.psi.main.KotlinExpressionParsing.parseIf()``` function, which parse ```if``` statement. A necessary change is to add the ability to declare variables inside an ```if``` statement, in the case when there are no variables in the init block, the ```psi tree``` obtained during parsing remains unchanged.
+
+##### ```when```
+
+For the parser part, the needed changes was to modify ```kotlin.compiler.psi.main.KotlinExpressionParsing.parseWhen()``` function, which parse ```when``` statement. A necessary change is to add the ability to declare variables inside an ```when``` statement, in the case when there are no variables in the init block, the ```psi tree``` obtained during parsing remains unchanged.
+
+
+#### Changes in desugaring stage
+
+We added a parameter to ```FirWhenExpression``` that is responsible for variables in the init block. 
+
+We also made necessary changes to the construction of ```RAW_FIR tree``` from both ```lightTree``` and ```PSI``` ```when``` and ```if```.
+
+#### Changes in IR construction stage
+
+Changes have been made here that add variables to the scope of the statements in which they were declared. 
+
+## Diagnostics
+
+Because of the fact that in the case of [implementaion through syntax sugar](#implementation-as-syntactic-sugar) compound ```when/if``` statement become a ```CALL_EXPRESSION``` with variables and ```when```/```if``` statement inside existing diagnostics do not work on them properly.
+
+But if we are talking about [implemenatinon by adding variables from the init block to the corresponding](#implemenatinon-by-adding-variables-from-the-init-block-to-the-corresponding-scope-during--ir-tree-construction) scope during  ```IR``` tree construction diagnostics work properly with this prototype. 
+
+We also written our own analysis tests to become confident in this fact. 
+
+## Tests
+
+Both implementations have been tested on existing tests and since they do not change the operation of the compiler if the existing syntax is used, they all pass.
+
+Also the our own tests were written. Both implementations pass tests related to parsing. 
+
+But as we already said diagnostics don't work properly with [first prototype](#implementation-as-syntactic-sugar). Because of this, most codegen tests run only with certain compiler settings that will turn off diagnostics.
+
+But if we are talking about [second](#implemenatinon-by-adding-variables-from-the-init-block-to-the-corresponding-scope-during--ir-tree-construction) prototype all our tests passed in the case of running them on K2 compiler. 
+
+## Benchmarks 
+
+We also wrote our benchmarks. We ran our benchmarks on these cases:
+[first prototype](#implementation-as-syntactic-sugar), [second prototype](#implemenatinon-by-adding-variables-from-the-init-block-to-the-corresponding-scope-during--ir-tree-construction), on case when we declare variables and then use standart ```if```/```when```, on case when we declare variables and then use standart ```if```/```when``` inside ```run``` scope function.
+There is results. 
+
+| case                  | compilation time | run time |
+|-----------------------|------------------|----------|
+| [first prototype](#implementation-as-syntactic-sugar) (```when```) | 2. 00356 s       | 0.0529 s| 
+| [first prototype](#implementation-as-syntactic-sugar) (```if```)   | 2.0085 s | 0.052 s|
+| [second prototype](#implemenatinon-by-adding-variables-from-the-init-block-to-the-corresponding-scope-during--ir-tree-construction) (```when```) | 1.955 s | 0.05077 s |
+| [second prototype](#implemenatinon-by-adding-variables-from-the-init-block-to-the-corresponding-scope-during--ir-tree-construction) (```if```) | 1.987 s | 0.05069 s |
+| existing syntax (```if```) | 1.985 s | 0.05119 s | 
+| existing syntax (```when```) | 1.97 s | 0.052 s |
+| existing syntax with run (```if```) | 1.99 s | 0.05289 s|
+| existing syntax with run (```when```) | 2.005 s | 0.05191 s |
+
+As you can see [first prototype](#implementation-as-syntactic-sugar) is relatively slow. 
+But [the second](#implemenatinon-by-adding-variables-from-the-init-block-to-the-corresponding-scope-during--ir-tree-construction) shows good speed.

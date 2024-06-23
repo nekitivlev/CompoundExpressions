@@ -921,20 +921,27 @@ But if we are talking about [second](#implemenatinon-by-adding-variables-from-th
 
 ## Benchmarks 
 
-We also wrote our benchmarks. We ran our benchmarks on these cases:
+We also wrote our benchmarks.
+As benchmarks we used the same examples containing different number of variables written with and without using init block in ```when``` and ```if``` statements.
+
+We ran our benchmarks on these cases:
 [first prototype](#implementation-as-syntactic-sugar), [second prototype](#implemenatinon-by-adding-variables-from-the-init-block-to-the-corresponding-scope-during--ir-tree-construction), on case when we declare variables and then use standart ```if```/```when```, on case when we declare variables and then use standart ```if```/```when``` inside ```run``` scope function.
+Each test file was run 100 times with 10 warmups beforehand.
 There is results. 
 
-| case                  | compilation time | run time |
+| case                  | Average compilation time | Average run time |
 |-----------------------|------------------|----------|
-| [first prototype](#implementation-as-syntactic-sugar) (```when```) | 2.00356 s       | 0.0529 s| 
-| [first prototype](#implementation-as-syntactic-sugar) (```if```)   | 2.0085 s | 0.052 s|
-| [second prototype](#implemenatinon-by-adding-variables-from-the-init-block-to-the-corresponding-scope-during--ir-tree-construction) (```when```) | 1.955 s | 0.05077 s |
-| [second prototype](#implemenatinon-by-adding-variables-from-the-init-block-to-the-corresponding-scope-during--ir-tree-construction) (```if```) | 1.987 s | 0.05069 s |
-| existing syntax (```if```) | 1.985 s | 0.05119 s | 
-| existing syntax (```when```) | 1.97 s | 0.052 s |
-| existing syntax with run (```if```) | 1.99 s | 0.05289 s|
-| existing syntax with run (```when```) | 2.005 s | 0.05191 s |
+| [first prototype](#implementation-as-syntactic-sugar) (```when```) | 2.69311 s| 0.04805 s| 
+| [first prototype](#implementation-as-syntactic-sugar) (```if```)   | 2.53378 s| 0.04714 s|
+| [second prototype](#implemenatinon-by-adding-variables-from-the-init-block-to-the-corresponding-scope-during--ir-tree-construction) (```when```) | 2.35559 s | 0.03988 s |
+| [second prototype](#implemenatinon-by-adding-variables-from-the-init-block-to-the-corresponding-scope-during--ir-tree-construction) (```if```) | 2.36185 s | 0.04128 s |
+| existing syntax (```if```) | 2.55353 s | 0.04535 s | 
+| existing syntax (```when```) | 2.52543 s | 0.04278  s |
+| existing syntax with run (```if```) | 2.72552 s | 0.04718 s|
+| existing syntax with run (```when```) | 2.73926 s | 0.04447 s |
 
+All benchmarks were run on ```Dell Precision 5570 with i9-12900H and 32 GB of RAM```.
 As you can see [first prototype](#implementation-as-syntactic-sugar) is relatively slow. 
 But [the second](#implemenatinon-by-adding-variables-from-the-init-block-to-the-corresponding-scope-during--ir-tree-construction) shows good speed.
+
+Tests cases: [existing syntax ```if```](https://github.com/nekitivlev/kotlin/tree/when_with_multiple_arguments_resolution/existingSyntaxExamplesIf), [existing syntax ```when```](https://github.com/nekitivlev/kotlin/tree/when_with_multiple_arguments_resolution/existingSyntaxExamplesWhen), [new syntax ```if```](https://github.com/nekitivlev/kotlin/tree/when_with_multiple_arguments_resolution/compoundSyntaxExamplesIf), [new syntax ```when```](https://github.com/nekitivlev/kotlin/tree/when_with_multiple_arguments_resolution/compoundSyntaxExamplesWhen).

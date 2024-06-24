@@ -941,7 +941,7 @@ There is results.
 | existing syntax with run (```when```) | 2.73926 s | 0.04447 s |
 
 All benchmarks were run on ```Dell Precision 5570 with i9-12900H and 32 GB of RAM```.
-The hyperfine utility was used for time measurement.
+The ```hyperfine``` utility was used for time measurement.
 
 As you can see [first prototype](#implementation-as-syntactic-sugar) is relatively slow. 
 But [the second](#implemenatinon-by-adding-variables-from-the-init-block-to-the-corresponding-scope-during--ir-tree-construction) shows good speed.

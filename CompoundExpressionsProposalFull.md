@@ -217,6 +217,7 @@ They also reflect each language’s overall design goals and philosophies. These
 can be different in different languages. Therefore, we cannot blindly transfer constructs
 from these languages to Kotlin.
 
+
 ## Existing solutions for compound expressions in control flow statements in Kotlin
 
 Some people love the classic ```for``` loop so much that they resort to writing their own for
@@ -766,22 +767,7 @@ while(val byteRead = inputStream.read(buffer); byteRead != -1){
 On the [listing 30](#listing-30), we consider an example of a ```while``` loop with compound variable initialization. This variable cannot be changed inside the ```while``` body. But it can be changed
 between its iterations. The first question that arises in the case of adding such a feature.
 The variable that is initialized in parentheses ```while``` loop is created once or must be created anew every iteration of the loop. This is a rather complicated question for which we
-do not have any arguments, either for one side or the other. While this example looks
-quite interesting, it is easily rewritten using existing syntax.
-
-```kotlin
-val buffer = ByteArray(8192)
-val bytesRead : Int
-val byteArrayOutputStream = ByteArrayOutputStream()
-val inputStream = FileInputStream(file)
-do{
-    val bytesRead = inputStream.read(buffer)
-} while(byteRead != -1)
-```
-
-<div style="text-align: center; margin-top: 5px;">
-    <em><d name="listing-31">Listing 31:</d> workaround for the example 30</em>
-</div>
+do not have any arguments, either for one side or the other. 
 
 ## Prototypes implemenation
 
@@ -947,3 +933,234 @@ As you can see [first prototype](#implementation-as-syntactic-sugar) is relative
 But [the second](#implemenatinon-by-adding-variables-from-the-init-block-to-the-corresponding-scope-during--ir-tree-construction) shows good speed.
 
 Tests cases: [existing syntax ```if```](https://github.com/nekitivlev/kotlin/tree/when_with_multiple_arguments_resolution/existingSyntaxExamplesIf), [existing syntax ```when```](https://github.com/nekitivlev/kotlin/tree/when_with_multiple_arguments_resolution/existingSyntaxExamplesWhen), [new syntax ```if```](https://github.com/nekitivlev/kotlin/tree/when_with_multiple_arguments_resolution/compoundSyntaxExamplesIf), [new syntax ```when```](https://github.com/nekitivlev/kotlin/tree/when_with_multiple_arguments_resolution/compoundSyntaxExamplesWhen).
+
+
+
+# Scopes
+
+As you can see earlier we have not a few arguments for adding compound expressions were built on the fact that it will be useful for working with scopes. But let's look at this area a bit more closely and also consider suggestions for improving scopes in Kotlin.
+
+
+## Ways of working with scopes 
+There are different approaches to work with scopes in various programming languages. 
+But most popular languages use roughly the same approach for dealing with scopes.
+
+### Kotlin 
+In Kotlin, the scope of variables is determined by their placement in the code:
+- **Local scope:** Variables declared inside a function are only accessible within that function.
+- **Class scope:** Variables declared within a class (e.g., properties) are accessible within that class. Access can be controlled using visibility modifiers (private, protected, internal, public).
+- **Package scope:** Functions and variables declared at the package level are accessible to all files within that package. The internal modifier makes them accessible only within the module.
+
+### JavaScript
+In JavaScript, scope is managed through different methods:
+- **Function scope:** Variables declared with var inside a function are accessible throughout that function.
+- **Block scope:** Variables declared with let and const are accessible only within the block in which they are declared (e.g., within a loop or conditional statement).
+
+```javascript
+function example() {
+  if (true) {
+    var x = 10; 
+    let y = 20; 
+  }
+  console.log(x); 
+  console.log(y); 
+}
+
+```
+
+### Python 
+Python uses the LEGB rule (Local, Enclosing, Global, Built-in) to determine variable scope:
+
+- **Local:** Variables declared inside a function.
+- **Enclosing:** Variables declared in the enclosing functions (closures).
+- **Global:** Variables declared at the module level.
+- **Built-in:** Built-in names, such as print.
+
+### C++
+In C++, variable scope is defined as follows:
+
+- **Local scope:** Variables declared inside functions or code blocks.
+- **Global scope:** Variables declared outside all functions.
+- **Class scope:** Variables declared within a class are accessible within that class.
+
+### Swift 
+Swift also employs multiple levels of scope:
+
+- **Local scope:** Variables declared inside a function are only accessible within that function.
+
+- **Class or struct scope:** Properties are accessible within their classes or structs. Access is controlled by modifiers (private, fileprivate, internal, public, open).
+
+### Rust 
+In Rust, scope is determined by modifiers and variable placement:
+
+- **Modules and packages:** Variables and functions can be declared in modules using mod. Visibility is controlled by the pub modifier.
+
+```rust
+mod example {
+    pub fn public_function() {
+        println!("This is a public function.");
+    }
+
+    fn private_function() {
+        println!("This is a private function.");
+    }
+}
+
+fn main() {
+    example::public_function(); // accessible
+    // example::private_function(); // error
+}
+
+```
+
+But there are also other approaches for dealing with scopes. 
+
+Some programming languages have the ability to delete to make a variable invisible in some scope, but this is often done through the use of macros and is not a feature built into the language.
+
+### Julia
+
+Julia has macros that allow for flexible code management. We can use a macro to remove a variable from an internal scope.
+
+```Julia
+macro remove_var(x)
+    return quote
+        local $x
+        nothing
+    end
+end
+
+x = 5
+
+if true
+    @remove_var x
+    # x not available here
+end
+
+println(x)  # x available here, output: 5
+```
+
+### Nim
+
+Nim also supports macros and code manipulation at compile time. Example of a macro to remove a variable from a scope:
+
+```Nim
+import macros
+
+macro removeVar(name: expr): stmt =
+  result = quote do:
+    var `name` {.discardable.}
+    `name` = default(typeof(`name`))
+
+var x = 5
+
+block:
+  removeVar(x)
+  # x not available here
+
+echo x  # x available here, output: 5
+
+```
+
+### Scala
+
+Scala supports metaprogramming using macros and annotations, allowing you to create your own compiler annotations.
+
+
+```Scala
+import scala.annotation.StaticAnnotation
+import scala.language.experimental.macros
+import scala.reflect.macros.blackbox
+
+class removeVar extends StaticAnnotation {
+  def macroTransform(annottees: Any*): Any = macro RemoveVarMacro.impl
+}
+
+object RemoveVarMacro {
+  def impl(c: blackbox.Context)(annottees: c.Expr[Any]*): c.Expr[Any] = {
+    import c.universe._
+    val result = annottees.map(_.tree).toList match {
+      case q"var $name: $tpe = $expr" :: body =>
+        val updatedBody = body.map {
+          case q"if (true) $expr2" =>
+            q"""
+              if (true) {
+                var $name: $tpe = null.asInstanceOf[$tpe]
+                $expr2
+              }
+            """
+          case other => other
+        }
+        q"var $name: $tpe = $expr; ..$updatedBody"
+    }
+    c.Expr[Any](q"..$result")
+  }
+}
+
+@removeVar
+var x: Int = 5
+
+if (true) {
+  // x is not available here
+}
+
+println(x)  // x available here, output: 5
+
+```
+
+## Possible extensions
+There are several ideas related to expanding existing ways of working with scopes.
+
+### ability to delete variables from scope
+We didn't find any requests to add this feature to kotlin, but some specific languages have this feature (you can find examples above).
+
+### [```let``` scope function with multiple arguments]()
+
+There is also exist an idea to add let with the ability to declare multiple variables. This looks like a good solution for the problems described [here](#listing-13).
+
+1. Code Cleanliness: Reduces nesting and improves code readability by reducing the number of nested let blocks.
+2. Template Code Reduction: Reduces repetitive code checks to null.
+3. Improved Reliability: Reduces the likelihood of errors due to misuse of nullable variables.
+
+#### Possible syntax
+```kotlin
+multilet (a, b, c) { nonNullA, nonNullB, nonNullC ->
+// Code executed if a, b and c are not null
+}
+```
+#### Possible usage 
+
+1. Checking Multiple Input Sources
+```kotlin
+multilet (nameField.text, emailField.text, passwordField.text) { name, email, password ->
+    validateAndSubmit(name, email, password)
+}
+```
+
+### ```with``` scope function with multiple arguments
+
+There are [requests](https://discuss.kotlinlang.org/t/using-with-function-with-multiple-receivers/2062) to add the ability to use multiple variables in a scope function. But we think that it is a bad idea to add such a feature, because the practice of using nested with functions shows that such code is much harder to read.
+
+Even so, we were able to find a [custom implementation of this feature](https://discuss.kotlinlang.org/t/multiple-scope-with-function/27429).
+
+### Nullability and scopes smartcasts
+
+We also considered the idea of adding the ability to pass information that a variable is definitely not null to the body of the function where the variable will be called.  So that using this information the compiler could avoid compiling parts of the function code related to checking this variable for null.
+
+```kotlin
+
+if(val x = fun(); x!=null){
+    fun1(x)
+}
+
+fun1(value : Int?){
+
+    if(value == null){
+        println("no")
+    }else{
+        //only println("yes") will be compiled
+        println("yes")
+    }
+}
+```
+
+But considering the available tools, adding such a feature would slow down the compiler very much, so we don't think it is expedient.

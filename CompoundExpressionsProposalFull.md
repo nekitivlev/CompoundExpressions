@@ -796,10 +796,10 @@ run{
 ```
 
 <div style="text-align: center; margin-top: 5px;">
-    <em><d name="listing-32">Listing 32:</d> desugared <code>if</code> prototype</em>
+    <em><d name="listing-31">Listing 31:</d> desugared <code>if</code> prototype</em>
 </div>
 
-On the [listing 32](#listing-32), we can see what will be the desugared [prototype we talked about](#listing-18)
+On the [listing 31](#listing-31), we can see what will be the desugared [prototype we talked about](#listing-18)
 earlier. We decided to do it this way because in this case, the scoping of variables declared inside ```if``` with compound expressions will really correspond to the scope of the ```if```.
 
 ##### Changes in parser
@@ -838,10 +838,10 @@ run{
 ```
 
 <div style="text-align: center; margin-top: 5px;">
-    <em><d name="listing-33">Listing 32:</d> desugared <code>when</code> prototype</em>
+    <em><d name="listing-32">Listing 32:</d> desugared <code>when</code> prototype</em>
 </div>
 
-On the [listing 33](#listing-33), we can see what will be the desugared [prototype we talked about](#listing-23)
+On the [listing 32](#listing-32), we can see what will be the desugared [prototype we talked about](#listing-23)
 earlier. We decided to do it this way because, in this case, the scoping of variables
 declared inside ```when``` with compound expressions will really correspond to the scope of
 the ```when```.
@@ -1113,7 +1113,7 @@ There are several ideas related to expanding existing ways of working with scope
 ### ability to delete variables from scope
 We didn't find any requests to add this feature to kotlin, but some specific languages have this feature (you can find examples above).
 
-### [```let``` scope function with multiple arguments]()
+### ```let``` scope function with multiple arguments
 
 There is also exist an idea to add let with the ability to declare multiple variables. This looks like a good solution for the problems described [here](#listing-13).
 

@@ -333,8 +333,12 @@ val result = a?.let { aNotNull ->
     <em><d name="listing-13">Listing 13:</d> nested <code>let</code> blocks with several nullable variables</em>
 </div>
 
-On the [listing 13](#listing-13), we consider an example where the user needs to use two nested let
+On the [listing 13](#listing-13), we consider an example where the user needs to use two nested ```let```
 blocks to check and use two variables in one function call. Such solutions add unnecessary complexity and verbosity as the number of parameters increases.
+
+After checking with BigCode it turned out that 286818 of 81170612 files (0.33%) contain two nested ```let```.
+
+11371 out of 81170612 files (0.01%) contain three or more nested ```let```.
 
 ## Existing solutions to the problem in working with multiple nullable variables
 
@@ -1117,6 +1121,7 @@ We didn't find any requests to add this feature to kotlin, but some specific lan
 
 There is also exist an idea to add let with the ability to declare multiple variables. This looks like a good solution for the problems described [here](#listing-13).
 
+
 1. Code Cleanliness: Reduces nesting and improves code readability by reducing the number of nested let blocks.
 2. Template Code Reduction: Reduces repetitive code checks to null.
 3. Improved Reliability: Reduces the likelihood of errors due to misuse of nullable variables.
@@ -1138,7 +1143,12 @@ multilet (nameField.text, emailField.text, passwordField.text) { name, email, pa
 
 ### ```with``` scope function with multiple arguments
 
-There are [requests](https://discuss.kotlinlang.org/t/using-with-function-with-multiple-receivers/2062) to add the ability to use multiple variables in a scope function. But we think that it is a bad idea to add such a feature, because the practice of using nested with functions shows that such code is much harder to read.
+There are [requests](https://discuss.kotlinlang.org/t/using-with-function-with-multiple-receivers/2062) to add the ability to use multiple variables in a scope function. 
+
+
+After checking with BigCode it turned out that 252622 of 81170612 files (0.31%) contain two nested ```with```.
+
+2277 out of 81170612 files (~0.00%) contain three or more nested ```with```.
 
 Even so, we were able to find a [custom implementation of this feature](https://discuss.kotlinlang.org/t/multiple-scope-with-function/27429).
 

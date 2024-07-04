@@ -1122,16 +1122,18 @@ We didn't find any requests to add this feature to kotlin, but some specific lan
 There is also exist an idea to add let with the ability to declare multiple variables. This looks like a good solution for the problems described [here](#listing-13).
 
 
-1. Code Cleanliness: Reduces nesting and improves code readability by reducing the number of nested let blocks.
-2. Template Code Reduction: Reduces repetitive code checks to null.
+1. Code Cleanliness: Reduces nesting and improves code readability by reducing the number of nested ```let``` blocks.
+2. Template Code Reduction: Reduces repetitive code checks to ```null```.
 3. Improved Reliability: Reduces the likelihood of errors due to misuse of nullable variables.
 
 #### Possible syntax
+
 ```kotlin
 multilet (a, b, c) { nonNullA, nonNullB, nonNullC ->
 // Code executed if a, b and c are not null
 }
 ```
+
 #### Possible usage 
 
 1. Checking Multiple Input Sources
@@ -1145,12 +1147,35 @@ multilet (nameField.text, emailField.text, passwordField.text) { name, email, pa
 
 There are [requests](https://discuss.kotlinlang.org/t/using-with-function-with-multiple-receivers/2062) to add the ability to use multiple variables in a scope function. 
 
+Possible syntax:
+
+```kotlin
+with(args, activity) {
+    putString(stringKey, “String”)
+    putInt(intKey, 12345)
+    putChar(charKey, ‘c’)
+}
+```
+
+equivalent to:
+
+```kotlin
+with(args) {
+    with(activity) {
+        putString(stringKey, “String”)
+        putInt(intKey, 12345)
+        putChar(charKey, ‘c’)
+    }
+}
+```
 
 After checking with BigCode it turned out that 252622 of 81170612 files (0.31%) contain two nested ```with```.
 
 2277 out of 81170612 files (~0.00%) contain three or more nested ```with```.
 
-Even so, we were able to find a [custom implementation of this feature](https://discuss.kotlinlang.org/t/multiple-scope-with-function/27429).
+Also we were able to find a [custom implementation of this feature](https://discuss.kotlinlang.org/t/multiple-scope-with-function/27429).
+
+In the end it looks like a good idea to add this feature to kotlin, but on the other hand I can't say that adding this feature will improve the existing code much.
 
 ### Nullability and scopes smartcasts
 

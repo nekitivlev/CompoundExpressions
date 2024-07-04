@@ -41,8 +41,7 @@ inside the when parentheses, we can’t add any expressions inside these parenth
 
 ### C++
 
-In C++, compound expressions are quite powerful, especially within control flow struc-
-tures. They often leverage the comma operator, which allows the execution of multiple
+In C++, compound expressions are quite powerful, especially within control flow structures. They often leverage the comma operator, which allows the execution of multiple
 expressions where each expression is evaluated and the result of the last expression is
 returned.
 
@@ -53,15 +52,15 @@ for (int i = 0, j = 100; i < j; i++, j--) {
 // Loop body
 }
 ```
+
 <div style="text-align: center; margin-top: 5px;">
     <em>Listing 2: C++ <code>for</code> loop</em>
 </div>
 
-On the [listing 2](#listing-2), we consider the C++ for loop, where the comma operator is used to
-manage two variables simultaneously in the loop’s initialization and progression expres-
-sions. i is incremented, and j is decremented with each iteration of the loop. This kind
+On the [listing 2](#listing-2), we consider the C++ ```for``` loop, where the comma operator is used to
+manage two variables simultaneously in the loop’s initialization and progression expressions. ```i``` is incremented, and ```j``` is decremented with each iteration of the loop. This kind
 of compound expression is very helpful in situations when we need to update multiple
-counters or indices synchronously. C++ also supports complex conditions inside the if
+counters or indices synchronously. C++ also supports complex conditions inside the ```if```
 statement and other control flow constructions, where we can execute some expressions
 before checking the condition.
 
@@ -78,7 +77,7 @@ if (int x = f(), y = g(); x > y) {
     <em>Listing 3: C++ <code>if</code> statement with compound assignments</em>
 </div>
 
-On the [listing 3](listing-3), we consider the C++ if statement, where the comma operator is used
+On the [listing 3](#listing-3), we consider the C++ ```if``` statement, where the comma operator is used
 to define two variables before the condition within the if, and a semicolon is used to
 separate the variable declaration from the expression being checked.
 
@@ -102,10 +101,9 @@ switch(int x = f(); x) {
     <em>Listing 4: C++ <code>switch</code> statement with compound assignments</em>
 </div>
 
-On the [listing 4](listing-4), we consider the C++ switch statement, where the initialization of the
-variable x is before the condition that is checked in the switch construction. The initial-
-ization of the variable x and the condition to be checked are separated by a semicolon.
-This use of initialization statements in switch conditions is a feature introduced in [C++17](https://en.cppreference.com/w/cpp/language/switch), enhancing the language’s ability to handle compound expressions cleanly.
+On the [listing 4](#listing-4), we consider the C++ ```switch``` statement, where the initialization of the
+variable ```x``` is before the condition that is checked in the ```switch``` construction. The initialization of the variable ```x``` and the condition to be checked are separated by a semicolon.
+This use of initialization statements in ```switch``` conditions is a feature introduced in [C++17](https://en.cppreference.com/w/cpp/language/switch), enhancing the language’s ability to handle compound expressions cleanly.
 
 
 <div id="listing-5"></div>
@@ -123,8 +121,8 @@ for(int i=0; i < n; i++){
     <em><d name="listing-5">Listing 5:</d> Java <code>for</code> loop</em>
 </div>
 
-On this listing 5, we are considering a classic for loop from Java, it has three different
-sections, just like for loop from C++ ([2](#listing-2)).
+On this [listing 5](#listing-5), we are considering a classic ```for``` loop from Java, it has three different
+sections, just like ```for``` loop from C++ ([2](#listing-2)).
 
 ### Go
 
@@ -166,8 +164,8 @@ if ((x++, y++, x + y > 5)) {
     <em><d name="listing-7">Listing 7:</d> JavaScript <code>if</code> statement with compound expression</em>
 </div>
 
-On the [listing 7](#listing-7), we consider JavaScript if statement with compound expression, on line
-2 we can see that before checking x+y>5 we increment x and y. We use the comma
+On the [listing 7](#listing-7), we consider JavaScript ```if``` statement with compound expression, on line
+2 we can see that before checking ```x+y>5``` we increment ```x``` and ```y```. We use the comma
 operator to sequentially execute the expression inside the brackets on line 1.
 
 <div id="listing-8"></div>
@@ -182,16 +180,16 @@ for (let a = 0, b =5; a <= 5; a++, b--) {
     <em><d name="listing-8">Listing 8:</d> JavaScript <code>for</code> statement with compound expression</em>
 </div>
 
-On the [listing 8](#listing-8), we consider JavaScript for statement with compound expression, on
-line 1 we can see that define a and b and then increment a and decrement b inside the
-for loop. We use the comma operator to define two variables inside one definition block
-and change their values inside one iteration block of the for statement.
+On the [listing 8](#listing-8), we consider JavaScript ```for``` statement with compound expression, on
+line 1 we can see that define ```a``` and ```b``` and then increment ```a``` and decrement ```b``` inside the
+```for``` loop. We use the comma operator to define two variables inside one definition block
+and change their values inside one iteration block of the ```for``` statement.
 
 ### Swift
 
-Swift’s approach to compound expressions in control flow statements, especially in if
+Swift’s approach to compound expressions in control flow statements, especially in ```if```
 statements includes optional binding mixed with boolean conditions. This mechanism
-helps to make if statements more safe and clear, because helps to avoid null pointer
+helps to make ```if``` statements more safe and clear, because helps to avoid ```null``` pointer
 exceptions which is a common problem in a lot of languages, and also makes code clear.
 
 <div id="listing-9"></div>
@@ -206,10 +204,10 @@ if let x = getX(), let y = getY(), x > y {
     <em><d name="listing-9">Listing 9:</d> Swift <code>if</code> statement with compound expression</em>
 </div>
 
-On the [listing 9](#listing-9), we consider Swift if statement with compound expression, on line 1 we
-can see that we use let statements inside if statement to safely unwrap optional values
-returned by getX() and getY(). If both values are non-null and x is greater than y, the
-body of the if statements executes.
+On the [listing 9](#listing-9), we consider Swift ```if``` statement with compound expression, on line 1 we
+can see that we use ```let``` statements inside ```if``` statement to safely unwrap optional values
+returned by ```getX()``` and ```getY()```. If both values are non-```null``` and ```x``` is greater than ```y```, the
+body of the ```if``` statements executes.
 
 Each of these examples shows that in different languages we have different approaches
 and syntactic features for handling compound expressions in control flow statements.
@@ -220,7 +218,7 @@ from these languages to Kotlin.
 
 ## Existing solutions for compound expressions in control flow statements in Kotlin
 
-Some people love the classic ```for``` loop so much that they resort to writing their own for
+Some people love the classic ```for``` loop so much that they resort to writing their own ```for```
 loop in Kotlin using existing language constructs in Kotlin:
 
 <div id="listing-10"></div>
@@ -272,11 +270,11 @@ loop construct in Kotlin. For its implementation, higher-order functions are use
 breaking out of the loop in a more controlled way by encapsulating the break logic within
 a BreakScope. However using higher-order functions makes the code inefficient, so this
 solution cannot be called a good one. It is also important to note that in some control flow
-expressions such as when there is a limited use of compound expressions.
+expressions such as ```when``` there is a limited use of compound expressions.
 
-We can declare a variable and also assign a value to it within when declaration. Also, the ability to declare a variable inside when statement brackets make it possible to create
-something similar in essence to if from C++ with one nested variable creation inside if
-parentheses. Because if is syntactic sugar over when in Kotlin.
+We can declare a variable and also assign a value to it within ```when``` declaration. Also, the ability to declare a variable inside ```when``` statement brackets make it possible to create
+something similar in essence to ```if``` from C++ with one nested variable creation inside ```if```
+parentheses. Because ```if``` is syntactic sugar over ```when``` in Kotlin.
 
 <div id="listing-11"></div>
 
@@ -292,8 +290,7 @@ if(int x = y(); x){
     <em><d name="listing-11">Listing 11:</d> C++ <code>if</code> with compound assignment</em>
 </div>
 
-On the [listing 11](#listing-11), we consider C++ if statement with the compound declaration of vari-
-able x in line 1. After that, this variable is checked for equality to null, and then a
+On the [listing 11](#listing-11), we consider C++ if statement with the compound declaration of variable ```x``` in line 1. After that, this variable is checked for equality to ```null```, and then a
 message corresponding to the result of the check is displayed.
 
 <div id="listing-12"></div>
@@ -309,15 +306,16 @@ when(val x = y()){
     <em><d name="listing-12">Listing 12:</d> Kotlin <code>when</code> with compound assignment</em>
 </div>
 
-On the [listing 12](#listing-12), we consider Kotlin when statement with the compound declaration of
-variable x in line 1. After, this variable is checked for equality to null in line 2, and if it is
-equal to null, the expression from line 2 is printed, otherwise from line 3.
+On the [listing 12](#listing-12), we consider Kotlin ```when``` statement with the compound declaration of
+variable ```x``` in line 1. After, this variable is checked for equality to ```null``` in line 2, and if it is
+equal to ```null```, the expression from line 2 is printed, otherwise from line 3.
 
 ## Problems with working with several nullable variables 
-Kotlin prides itself on null safety, but the current mechanisms for dealing with multiple
+
+Kotlin prides itself on ```null``` safety, but the current mechanisms for dealing with multiple
 nullable variables can sometimes lead to less clean code and an increase in boilerplate.
 For instance, when calling a function only if certain parameters are not null, developers
-might resort to nested let blocks:
+might resort to nested ```let``` blocks:
 
 <div id="listing-13"></div>
 
@@ -365,7 +363,7 @@ fun Pair<String?, Int?>.let(action: (pair: Pair<String?, Int?>) -> Unit) {
 </div>
 
 On the [listing 14](#listing-14), we consider a solution to the problem described earlier by using an
-extension function on Pair. Paired objects in combination with let are used to simultaneously check two parameters that can be null. This approach, as discussed
+extension function on ```Pair```. Paired objects in combination with ```let``` are used to simultaneously check two parameters that can be null. This approach, as discussed
 in the [Kotlin discussions](https://discuss.kotlinlang.org/t/kotlin-null-check-for-multiple-nullable-vars/1946/2), provides less flexibility and increases complexity when
 there are more than two parameters.
 
@@ -391,9 +389,9 @@ fun test() {
     <em><d name="listing-15">Listing 15:</d> generic function solution</em>
 </div>
 
-On the listing 21, we consider a solution to the problem described earlier by using
+On the [listing 15](#listing-15), we consider a solution to the problem described earlier by using
 the generic function ifNotNull. This function executes only if all parameters are
-non-null. Using a generic function reduces some boilerplate but requires overloading the function for different numbers of arguments, adding to the codebase’s
+non-```null```. Using a generic function reduces some boilerplate but requires overloading the function for different numbers of arguments, adding to the codebase’s
 complexity.
 
 * #### Using of extension functions
@@ -417,14 +415,15 @@ return this(a, b, c)
     <em><d name="listing-16">Listing 16:</d> extension function solution</em>
 </div>
 
-On the [listing 22](#listing-22), we consider an extension callIfNotNull on function references
-to call only if all parameters are non-null. This method simplifies calling functions
+On the [listing 16](#listing-16), we consider an extension ```callIfNotNull``` on function references
+to call only if all parameters are non-```null```. This method simplifies calling functions
 with nullable parameters but necessitates a separate function definition for each
 variable count, which is not ideal for code maintenance and readability.
 
 ## Solutions to similar problems in other languages
+
 Swift has a similar problem with null-checking multiple variables and solves
-this by making it easy to declare local values within if statements:
+this by making it easy to declare local values within ```if``` statements:
 
 <div id="listing-17"></div>
 
@@ -438,10 +437,10 @@ if let name = name, let age = age {
     <em><d name="listing-17">Listing 17:</d> Swift if with let</em>
 </div>
 
-On the [listing 17](#listing-17), we consider usage of if with let to work with nullable variables
-name and age. let statements try to unwrap the values of name and age. If both
-variables contain non-null values, the block of code inside the if will execute. The
-unwrapped variables name and age are only visible within the scope of the if block.
+On the [listing 17](#listing-17), we consider usage of ```if``` with ```let``` to work with nullable variables
+```name``` and ```age```. ```let``` statements try to unwrap the values of ```name``` and ```age```. If both
+variables contain non-```null``` values, the block of code inside the ```if``` will execute. The
+unwrapped variables ```name``` and ```age``` are only visible within the scope of the ```if``` block.
 
 ## Evaluation of research about control flow statements
 Based on this evaluation, we will decide which of the control flow statements
@@ -450,18 +449,18 @@ should have compound expressions added to them.
 ### ```if```
 
 As you can see from the examples ([3](#listing-3), [6](#listing-6), [7](#listing-7), [9](#listing-9)), compound expressions
-in if statements are quite common among modern programming languages. We also
+in ```if``` statements are quite common among modern programming languages. We also
 think that the case ([13](#listing-13)) when you need to check several nullable variables before passing
 them to a function is quite important because functions and nullable variables are quite
 common entities when writing code. We also think it is very important to note that if we
 add compound expressions in a Swift-like manner, we will be able to create variables
-directly inside the if and limit their scope to the scope of the if. This will help in solving
-problems related to naming conflicts. Also, this feature will help prevent any null-related
-problems related to variables that are declared inside if, outside of it, as they will not be
+directly inside the ```if``` and limit their scope to the scope of the ```if```. This will help in solving
+problems related to naming conflicts. Also, this feature will help prevent any ```null```-related
+problems related to variables that are declared inside ```if```, outside of it, as they will not be
 available outside of it.
 
-In light of these benefits, we propose a new syntax for the if statement, which will add
-the ability to declare local variables before the condition is checked in the if statement.
+In light of these benefits, we propose a new syntax for the ```if``` statement, which will add
+the ability to declare local variables before the condition is checked in the ```if``` statement.
 
 <div id="listing-18"></div>
 
@@ -475,10 +474,10 @@ if(val val1 = <expression1>; ... ; val valN = <expressionN>; <if_expression>){
     <em><d name="listing-18">Listing 18:</d> Proposed syntax of <code>if</code> with compound expressions</em>
 </div>
 
-In [listing 18](#listing-18), we consider our proposed syntax for an if statement with compound expressions. We propose, similar to what is done in [C++](#listing-3) and [Swift](#listing-9), to allow variables to
+In [listing 18](#listing-18), we consider our proposed syntax for an ```if``` statement with compound expressions. We propose, similar to what is done in [C++](#listing-3) and [Swift](#listing-9), to allow variables to
 be declared before the condition is checked.
 
-Let’s also consider this example of using compound expressions inside an if statement.
+Let’s also consider this example of using compound expressions inside an ```if``` statement.
 
 <div id="listing-19"></div>
 
@@ -502,11 +501,13 @@ fun whoIsOldest(person1: Person?, person2: Person?) {
 </div>
 
 On the [listing 19](#listing-19), we consider a scenario where we determine which of two individuals
-is older, and both are represented by nullable Person objects. The enhanced if syntax facilitates direct checks and smart casts, allowing for seamless access to properties like
-age without additional null checks.
-The benefit in general is that you can use earlier values in later expressions. In the [listing 19](#listing-19), p1 and p2 have already been null-checked, so we can access their age property
+is older, and both are represented by nullable ```Person``` objects. The enhanced if syntax facilitates direct checks and smart casts, allowing for seamless access to properties like
+age without additional ```null``` checks.
+The benefit in general is that you can use earlier values in later expressions. In the [listing 19](#listing-19), ```p1``` and ```p2``` have already been ```null```-checked, so we can access their ```age``` property
 directly. And because the expressions can be anything that returns a nullable type they
 can also be used with safe-casts.
+
+<div id="listing-20"></div>
 
 ```kotlin
 if (val child = person as? Child; val car = child.favouriteToy as? Car;
@@ -522,18 +523,18 @@ if (val child = person as? Child; val car = child.favouriteToy as? Car;
 
 On the [listing 20](#listing-20), we consider the example of using safe-casts with compound expres-
 sions in the ```if``` statement. In the example, the variables are checked for conformity to the
-required type, and if the type is correct and non-```null```, the body of if is executed. This is
+required type, and if the type is correct and non-```null```, the body of ```if``` is executed. This is
 a fairly common use case to check if something is non-```null``` and then perform an additional
 check to see if it is appropriate to use it.
 
-So we can see that adding compound expressions to an if statement will have an impact
+So we can see that adding compound expressions to an ```if``` statement will have an impact
 on safe casts. Safe casts following a compound assignment offer improved type safety.
-Since the variables are only accessible within the ```if``` body after passing the null checks,
+Since the variables are only accessible within the ```if``` body after passing the ```null``` checks,
 the compiler can guarantee their types, avoiding the potential for type-related errors.
 
 We would also like to point out that adding compound expressions to an ```if``` statement will
 reduce the amount of boilerplate code in cases like this [one](#listing-13) since it eliminates the
-need to use nested let blocks or separate individual variable checks.
+need to use nested ```let``` blocks or separate individual variable checks.
 
 In light of the previously listed benefits of adding compound expressions to the ```if``` statement, we think it is appropriate to add compound expressions to [the ```if``` statement in the form we have proposed](#listing-18).
 
@@ -546,6 +547,8 @@ But there is still an [example](#listing-4) (```switch``` is the analog of when 
 to find a [request on youtrack](https://youtrack.jetbrains.com/issue/KT-25698) that suggests adding the ability to declare variables
 inside ```when``` parentheses, similar to what [we suggested for ```if```](#listing-18).
 
+<div id="listing-21"></div>
+
 ```kotlin
 when (val x = a.foo(); bar(a, x)) {
     is Case1 -> doStuff1(a, x)
@@ -556,6 +559,8 @@ when (val x = a.foo(); bar(a, x)) {
 <div style="text-align: center; margin-top: 5px;">
     <em><d name="listing-21">Listing 21:</d> <code>when</code> with compound variable initialization</em>
 </div>
+
+<div id="listing-22"></div>
 
 ```kotlin
 when (val x = a.foo() as? buz; val y = b.foo() as? buz; x != null && y != null) {
@@ -586,11 +591,16 @@ will be restricted to those parentheses.
 
 In light of all these benefits, we propose our prototype ```when``` with compound expressions.
 
+
+<div id="listing-23"></div>
+
+
 ```kotlin
 when (val val1 = <expression1>; ... ;val valN = <expressionN>;<when_expression>) {
 
 }
 ```
+
 <div style="text-align: center; margin-top: 5px;">
     <em><d name="listing-23">Listing 23:</d> Proposed syntax of <code>when</code> statement</em>
 </div>
@@ -607,6 +617,8 @@ able sequence of elements. It includes an iteration variable, a container expres
 provides the elements, and a loop body that executes each element in [the iterable](https://kotlinlang.org/spec/statements.html#loop-statements).
 
 The ```for```-loop is a syntactic construct that can be overloaded, expanding as follows:
+
+<div id="listing-24"></div>
 
 ```kotlin
 when(val $iterator = C.iterator()) {

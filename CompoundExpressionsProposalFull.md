@@ -1119,7 +1119,7 @@ We didn't find any requests to add this feature to kotlin, but some specific lan
 
 ### ```let``` scope function with multiple arguments
 
-There is also exist an idea to add let with the ability to declare multiple variables. This looks like a good solution for the problems described [here](#listing-13).
+There is also exist an idea to add ```let``` with the ability to declare multiple variables. This looks like a good solution for the problems described [here](#listing-13).
 
 
 1. Code Cleanliness: Reduces nesting and improves code readability by reducing the number of nested ```let``` blocks.
@@ -1179,10 +1179,9 @@ In the end it looks like a good idea to add this feature to kotlin, but on the o
 
 ### Nullability and scopes smartcasts
 
-We also considered the idea of adding the ability to pass information that a variable is definitely not null to the body of the function where the variable will be called.  So that using this information the compiler could avoid compiling parts of the function code related to checking this variable for null.
+We also considered the idea of adding the ability to pass information that a variable is definitely not ```null``` to the body of the function where the variable will be called.  So that using this information the compiler could avoid compiling parts of the function code related to checking this variable for ```null```.
 
 ```kotlin
-
 if(val x = fun(); x!=null){
     fun1(x)
 }

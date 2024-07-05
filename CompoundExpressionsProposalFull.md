@@ -1210,3 +1210,53 @@ fun1(value : Int?){
 ```
 
 But considering the available tools, adding such a feature would slow down the compiler very much, so we don't think it is expedient.
+
+### Local scopes
+
+While talking about scopes, the idea of being able to import modules locally like in ```OCaml``` and ```Haskell``` also came up.
+This has some uscases, let's look at them.
+
+**1. Avoiding Name Conflicts:** 
+When working with libraries that contain classes or functions with the same names, local imports can help avoid name conflicts. 
+
+```kotlin
+fun process() {
+    run {
+        import com.example.package1.Helper
+        val helper1 = Helper()
+        helper1.doSomething()
+    }
+
+    run {
+        import com.example.package2.Helper
+        val helper2 = Helper()
+        helper2.doSomethingElse()
+    }
+}
+```
+
+**2. Restricting Import Scope:** 
+Local imports can restrict the visibility of imported modules to a specific block of code, helping to prevent the accidental use of imported elements outside of that block.
+
+```kotlin
+fun performAction() {
+    run {
+        import com.example.utils.ActionUtil
+        ActionUtil.performSpecificAction()
+    }
+    // ActionUtil is not accessible here
+}
+```
+
+**3. Managing Dependencies:**
+You can locally import dependencies needed only for a specific test method.
+This makes it easier to understand the dependencies of each test and prevents accidental use of unnecessary dependencies.
+
+```kotlin
+@Test
+fun testMathOperations() {
+    // Local import for testing
+    import org.junit.jupiter.api.Assertions.assertEquals
+    assertEquals(4, 2 + 2)
+}
+```

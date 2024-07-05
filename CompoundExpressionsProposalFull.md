@@ -1260,3 +1260,5 @@ fun testMathOperations() {
     assertEquals(4, 2 + 2)
 }
 ```
+
+As you can see this has some usecases, despite this we could not find any queries regarding this feature on the kotlin forums. 

@@ -1044,6 +1044,8 @@ In JavaScript, scope is managed through different methods:
 - **Function scope:** Variables declared with var inside a function are accessible throughout that function.
 - **Block scope:** Variables declared with let and const are accessible only within the block in which they are declared (e.g., within a loop or conditional statement).
 
+<div id="listing-36"></div>
+
 ```javascript
 function example() {
   if (true) {
@@ -1055,6 +1057,10 @@ function example() {
 }
 
 ```
+
+<div style="text-align: center; margin-top: 5px;">
+    <em><d name="listing-36">Listing 36:</d> example of working with scopes in JavaScript </em>
+</div>
 
 ### Python 
 Python uses the LEGB rule (Local, Enclosing, Global, Built-in) to determine variable scope:
@@ -1083,6 +1089,8 @@ In Rust, scope is determined by modifiers and variable placement:
 
 - **Modules and packages:** Variables and functions can be declared in modules using mod. Visibility is controlled by the pub modifier.
 
+<div id="listing-37"></div>
+
 ```rust
 mod example {
     pub fn public_function() {
@@ -1101,6 +1109,10 @@ fn main() {
 
 ```
 
+<div style="text-align: center; margin-top: 5px;">
+    <em><d name="listing-37">Listing 37:</d> example of working with scopes in Rust </em>
+</div>
+
 But there are also other approaches for dealing with scopes. 
 
 Some programming languages have the ability to delete to make a variable invisible in some scope, but this is often done through the use of macros and is not a feature built into the language.
@@ -1108,6 +1120,8 @@ Some programming languages have the ability to delete to make a variable invisib
 ### Julia
 
 Julia has macros that allow for flexible code management. We can use a macro to remove a variable from an internal scope.
+
+<div id="listing-38"></div>
 
 ```Julia
 macro remove_var(x)
@@ -1127,9 +1141,15 @@ end
 println(x)  # x available here, output: 5
 ```
 
+<div style="text-align: center; margin-top: 5px;">
+    <em><d name="listing-38">Listing 38:</d> example of deleting variable from scope in Julia </em>
+</div>
+
 ### Nim
 
 Nim also supports macros and code manipulation at compile time. Example of a macro to remove a variable from a scope:
+
+<div id="listing-39"></div>
 
 ```Nim
 import macros
@@ -1149,10 +1169,15 @@ echo x  # x available here, output: 5
 
 ```
 
+<div style="text-align: center; margin-top: 5px;">
+    <em><d name="listing-39">Listing 39:</d> example of deleting variable from scope in Nim </em>
+</div>
+
 ### Scala
 
 Scala supports metaprogramming using macros and annotations, allowing you to create your own compiler annotations.
 
+<div id="listing-40"></div>
 
 ```Scala
 import scala.annotation.StaticAnnotation
@@ -1195,6 +1220,10 @@ println(x)  // x available here, output: 5
 
 ```
 
+<div style="text-align: center; margin-top: 5px;">
+    <em><d name="listing-40">Listing 40:</d> example of deleting variable from scope in Scala </em>
+</div>
+
 ## Possible extensions
 There are several ideas related to expanding existing ways of working with scopes.
 
@@ -1212,26 +1241,39 @@ There is also exist an idea to add ```let``` with the ability to declare multipl
 
 #### Possible syntax
 
+<div id="listing-41"></div>
+
 ```kotlin
 multilet (a, b, c) { nonNullA, nonNullB, nonNullC ->
 // Code executed if a, b and c are not null
 }
 ```
 
+<div style="text-align: center; margin-top: 5px;">
+    <em><d name="listing-41">Listing 41:</d> possible syntax for multilet in Kotlin </em>
+</div>
+
 #### Possible usage 
 
 1. Checking Multiple Input Sources
+
+<div id="listing-42"></div>
+
 ```kotlin
 multilet (nameField.text, emailField.text, passwordField.text) { name, email, password ->
     validateAndSubmit(name, email, password)
 }
 ```
 
+<div style="text-align: center; margin-top: 5px;">
+    <em><d name="listing-42">Listing 42:</d> possible usage of multilet in Kotlin </em>
+</div>
+
 ### ```with``` scope function with multiple arguments
 
 There are [requests](https://discuss.kotlinlang.org/t/using-with-function-with-multiple-receivers/2062) to add the ability to use multiple variables in a scope function. 
 
-Possible syntax:
+<div id="listing-43"></div>
 
 ```kotlin
 with(args, activity) {
@@ -1241,7 +1283,12 @@ with(args, activity) {
 }
 ```
 
-equivalent to:
+<div style="text-align: center; margin-top: 5px;">
+    <em><d name="listing-43">Listing 43:</d> possible syntax of <code>with</code> with multiple variables in Kotlin </em>
+</div>
+
+
+<div id="listing-44"></div>
 
 ```kotlin
 with(args) {
@@ -1252,6 +1299,10 @@ with(args) {
     }
 }
 ```
+
+<div style="text-align: center; margin-top: 5px;">
+    <em><d name="listing-44">Listing 44:</d> equiavalent of <code>with</code> with multiple variables in Kotlin </em>
+</div>
 
 After checking with BigCode it turned out that 252622 of 81170612 files (0.31%) contain two nested ```with```.
 
@@ -1264,6 +1315,8 @@ In the end it looks like a good idea to add this feature to kotlin, but on the o
 ### Nullability and scopes smartcasts
 
 We also considered the idea of adding the ability to pass information that a variable is definitely not ```null``` to the body of the function where the variable will be called.  So that using this information the compiler could avoid compiling parts of the function code related to checking this variable for ```null```.
+
+<div id="listing-45"></div>
 
 ```kotlin
 if(val x = fun(); x!=null){
@@ -1281,6 +1334,10 @@ fun1(value : Int?){
 }
 ```
 
+<div style="text-align: center; margin-top: 5px;">
+    <em><d name="listing-45">Listing 45:</d> example of a case where the previously described feature would be useful </em>
+</div>
+
 But considering the available tools, adding such a feature would slow down the compiler very much, so we don't think it is expedient.
 
 ### Local scopes
@@ -1290,6 +1347,8 @@ This has some uscases, let's look at them.
 
 **1. Avoiding Name Conflicts:** 
 When working with libraries that contain classes or functions with the same names, local imports can help avoid name conflicts. 
+
+<div id="listing-46"></div>
 
 ```kotlin
 fun process() {
@@ -1307,8 +1366,15 @@ fun process() {
 }
 ```
 
+
+<div style="text-align: center; margin-top: 5px;">
+    <em><d name="listing-46">Listing 46:</d> example of avoiding name conflict using local imports</em>
+</div>
+
 **2. Restricting Import Scope:** 
 Local imports can restrict the visibility of imported modules to a specific block of code, helping to prevent the accidental use of imported elements outside of that block.
+
+<div id="listing-47"></div>
 
 ```kotlin
 fun performAction() {
@@ -1320,9 +1386,15 @@ fun performAction() {
 }
 ```
 
+<div style="text-align: center; margin-top: 5px;">
+    <em><d name="listing-47">Listing 47:</d> example of restricting import scope using local imports</em>
+</div>
+
 **3. Managing Dependencies:**
 You can locally import dependencies needed only for a specific test method.
 This makes it easier to understand the dependencies of each test and prevents accidental use of unnecessary dependencies.
+
+<div id="listing-48"></div>
 
 ```kotlin
 @Test
@@ -1332,5 +1404,9 @@ fun testMathOperations() {
     assertEquals(4, 2 + 2)
 }
 ```
+
+<div style="text-align: center; margin-top: 5px;">
+    <em><d name="listing-48">Listing 48:</d> example of managing dependencies using local imports</em>
+</div>
 
 As you can see this has some usecases, despite this we could not find any queries regarding this feature on the kotlin forums. 

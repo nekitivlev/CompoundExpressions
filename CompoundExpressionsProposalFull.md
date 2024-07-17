@@ -660,6 +660,80 @@ if(val? x = fun(); x > 10){
     <em><d name="listing-26">Listing 26:</d> example with val?</em>
 </div>
 
+### Additional notes about alternative syntax for compound expressions in ```if```
+Another potential syntax looks like this. 
+
+<div id="listing-27"></div>
+
+```kotlin
+if (a > b && val x = someCalculation() && x > 10 && val y = anotherCalculation(x) && y < 20) {
+    // Block to execute
+}
+```
+
+<div style="text-align: center; margin-top: 5px;">
+    <em><d name="listing-27">Listing 27:</d> Potential syntax for <code>if</code> with compound variables declaration</em>
+</div>
+
+In this syntax we make it possible to declare variables in any part of the expression that is used inside ```if```.
+Such syntax has several primes in comparison with [syntax that was proposed initially](#listing-18):
+
+
+1. ***Scoped Variable Declarations:***
+    * ***Proposed Syntax:*** Variables declared within the ```if``` condition are scoped to that block, ensuring they are only accessible within the block. This helps prevent unintended side effects and keeps the code clean and safe.
+    * [***Init Block Syntax:***](#listing-14) Similarly, variables declared in the init block are also scoped to the if statement, but combining declarations and checks in one line enhances readability.
+
+2. ***Enhanced Null Safety:***
+    * ***Proposed Syntax:*** Allows for direct checks and smart casts within the ```if``` condition. It ensures that all variables are checked for nullability before being used in the block.
+
+
+
+    ```kotlin
+    if (a > b && val x = someCalculation() && x != null && x > 10 && val y = anotherCalculation(x) && y < 20) {
+        // Block to execute
+    }
+    ```
+
+
+    * [***Init Block Syntax:***](#listing-14)  Requires additional null checks and can lead to more complex and less readable code.
+
+    ```kotlin
+    if (val x = someCalculation(); val y = anotherCalculation(x); a > b && x != null && x > 10 && y < 20) {
+    // Block to execute
+    }
+    ```
+
+
+But this syntax also has some disatvantages. 
+
+1. ***Reduced Readability:***
+
+    * ***Proposed Syntax:*** Using && to combine variable declarations and conditions in a single line can make the code less readable, especially when multiple variables and conditions are involved. The combined expressions can become cluttered and harder to parse quickly.
+    
+    ```kotlin
+    if (a > b && val x = someCalculation() && x > 10 && val y = anotherCalculation(x) && y < 20) {
+    // Block to execute
+    }
+    ```
+
+    * [***Init Block Syntax:***](#listing-14) Having a separate initialization block keeps the code cleaner and more readable by clearly separating variable declarations from the conditions.
+
+    ```kotlin
+    if (val x = someCalculation(); val y = anotherCalculation(x); a > b && x > 10 && y < 20) {
+    // Block to execute
+    }
+    ```
+
+2. ***Difficulty in Debugging:***
+    * ***Proposed Syntax:*** Debugging becomes more challenging with the && syntax because all the declarations and conditions are combined. It can be difficult to identify which part of the expression caused an issue or which variable failed the condition.
+
+    * [***Init Block Syntax:***](#listing-14) The init block approach makes it easier to isolate and debug each variable initialization and condition, as each declaration and condition is explicitly separated.
+
+3. ***Inconsistent Flow Control:***
+    * ***Proposed Syntax:*** Combining multiple declarations and conditions with && can lead to inconsistent flow control, especially if side effects are present in the expressions. The order of evaluation and potential side effects can become less predictable.
+
+    * [***Init Block Syntax:***](#listing-14) The init block syntax provides more consistent and predictable flow control, as each declaration and condition is evaluated in a clear, sequential manner.
+
 ### ```for```
 
 A ```for```-loop is a type of loop specifically designed to iterate over collections or any iter-
@@ -668,7 +742,7 @@ provides the elements, and a loop body that executes each element in [the iterab
 
 The ```for```-loop is a syntactic construct that can be overloaded, expanding as follows:
 
-<div id="listing-27"></div>
+<div id="listing-28"></div>
 
 ```kotlin
 when(val $iterator = C.iterator()) {
@@ -680,10 +754,10 @@ when(val $iterator = C.iterator()) {
 ```
 
 <div style="text-align: center; margin-top: 5px;">
-    <em><d name="listing-27">Listing 27:</d> <code>for</code>-loop expanding</em>
+    <em><d name="listing-28">Listing 28:</d> <code>for</code>-loop expanding</em>
 </div>
 
-On the [listing 27](#listing-27), we consider expansion of ```for(VarDecl in C)``` Body. It is the same as
+On the [listing 28](#listing-28), we consider expansion of ```for(VarDecl in C)``` Body. It is the same as
 [24](#listing-24) where ```iterator```, ```hasNext```, ```next``` are all suitable operator functions available in the
 current scope. ```VarDecl``` here may be a variable name or set of variables.
 
@@ -703,7 +777,7 @@ feature for many developers switching to Kotlin from other languages.
 Let’s look at an example of what a classic ```for``` loop might look like in Kotlin.
 
 
-<div id="listing-28"></div>
+<div id="listing-29"></div>
 
 ```kotlin
 for (val i = 0; i < numIterations; i++) {
@@ -712,10 +786,10 @@ for (val i = 0; i < numIterations; i++) {
 ```
 
 <div style="text-align: center; margin-top: 5px;">
-    <em><d name="listing-28">Listing 28:</d> Proposed syntax of classic <code>for</code> loop in Kotlin</em>
+    <em><d name="listing-29">Listing 29:</d> Proposed syntax of classic <code>for</code> loop in Kotlin</em>
 </div>
 
-On the [listing 28](#listing-28), we are looking at what a classic ```for``` loop in Kotlin might look like. The
+On the [listing 29](#listing-29), we are looking at what a classic ```for``` loop in Kotlin might look like. The
 variable that is created for iteration, in this case, ```i```, cannot be changed inside the loop
 body, but it is changed according to the rule described at the end of the expression written
 in brackets in ```for``` (in this example, ```i++```). Also in the center, it records the condition when
@@ -723,7 +797,7 @@ the loop exits (in this example, ```i < numIterations```).
 
 Let’s consider potential use cases for this syntax.
 
-<div id="listing-29"></div>
+<div id="listing-30"></div>
 
 ```kotlin
 for (val i = 0; i < numIterations; i++) {
@@ -735,10 +809,10 @@ for (val i = 0; i < numIterations; i++) {
 ```
 
 <div style="text-align: center; margin-top: 5px;">
-    <em><d name="listing-29">Listing 29:</d> Changing iteration boundaries while traversing a loop example</em>
+    <em><d name="listing-30">Listing 30:</d> Changing iteration boundaries while traversing a loop example</em>
 </div>
 
-On the [listing 29](#listing-29), we consider an example of using the classic for proposed on [the
+On the [listing 30](#listing-30), we consider an example of using the classic for proposed on [the
 discuss.kotlinlang.org](https://discuss.kotlinlang.org/t/for-loop-with-dynamic-condition/57). In this example, the right border of the segment along which the variable is iterated is changed. This is not possible at the moment because the boundaries along which the iteration is performed are created when creating for
 and are not changed further [24](#listing-27). Although this example looks quite convincing, we don’t
 think it is a good practice to write such code because, even with such a simple example,
@@ -747,7 +821,7 @@ which step the loop will be exited. Writing such constructs also complicates fin
 in the program. It is also important to note that this example can be rewritten using ```while```
 in the current Kotlin syntax.
 
-<div id="listing-30"></div>
+<div id="listing-31"></div>
 
 ```kotlin
 var i = 0
@@ -760,10 +834,10 @@ while(i < numIterations){
 ```
 
 <div style="text-align: center; margin-top: 5px;">
-    <em><d name="listing-30">Listing 30:</d> changing iteration boundaries while traversing a loop example</em>
+    <em><d name="listing-31">Listing 31:</d> changing iteration boundaries while traversing a loop example</em>
 </div>
 
-On the [listing 30](#listing-30), we consider a workaround of the previously discussed example of the
+On the [listing 31](#listing-31), we consider a workaround of the previously discussed example of the
 usage of classic ```for```. The disadvantages of this workaround are that the ```i``` variable is
 visible outside ```while```, and it can also be changed inside the ```while``` body (all this adds
 unnecessary uncertainty in program execution). Also, separating the declaration and the
@@ -771,7 +845,7 @@ rules by which the variable we are iterating on changes makes the code less read
 
 Let’s look at another example.
 
-<div id="listing-31"></div>
+<div id="listing-32"></div>
 
 ```kotlin
 for(val i = 0; i < 500; i+= (if (i < 40) 10 else 20)) {
@@ -780,17 +854,17 @@ for(val i = 0; i < 500; i+= (if (i < 40) 10 else 20)) {
 ```
 
 <div style="text-align: center; margin-top: 5px;">
-    <em><d name="listing-31">Listing 31:</d> Dynamically changing the step while iterating through a loop</em>
+    <em><d name="listing-32">Listing 32:</d> Dynamically changing the step while iterating through a loop</em>
 </div>
 
-On the [listing 31](#listing-31), we consider an example of using the classic ```for``` proposed on the
+On the [listing 32](#listing-32), we consider an example of using the classic ```for``` proposed on the
 [discuss.kotlinlang.org](https://discuss.kotlinlang.org/t/for-loop-dynamic-step/6429). In this example, the variable being iterated over can
 be changed by 10 or 20, depending on its value. This example shows how much more
 flexible the classic ```for``` loop can be. Despite this, we believe that writing such constructs
 negatively affects code readability and complicates it. It is also important to note that this
 example can be rewritten quite easily using ```while``` in the current Kotlin syntax.
 
-<div id="listing-32"></div>
+<div id="listing-33"></div>
 
 ```kotlin
 var i = 0
@@ -801,10 +875,10 @@ while( i < 500 ){
 ```
 
 <div style="text-align: center; margin-top: 5px;">
-    <em><d name="listing-32">Listing 32:</d> Dynamically changing the step while iterating through a loop</em>
+    <em><d name="listing-33">Listing 33:</d> Dynamically changing the step while iterating through a loop</em>
 </div>
 
-On the [listing 32](#listing-32), we consider a workaround of the previously discussed example of the
+On the [listing 33](#listing-33), we consider a workaround of the previously discussed example of the
 usage of classic ```for```. The disadvantages of this workaround are that the ```i``` variable is
 visible outside ```while```, and it can also be changed inside the ```while``` body (all this adds unnecessary uncertainty in program execution). Also, separating the declaration and the
 rules by which the variable we are iterating on changes makes the code less readable. 
@@ -827,7 +901,7 @@ contradict Kotlin’s language design, which is already a big plus compared to `
 
 Let’s take a look at an example we managed to find during our research.
 
-<div id="listing-33"></div>
+<div id="listing-34"></div>
 
 ```kotlin
 val buffer = ByteArray(8192)
@@ -840,10 +914,10 @@ while(val byteRead = inputStream.read(buffer); byteRead != -1){
 ```
 
 <div style="text-align: center; margin-top: 5px;">
-    <em><d name="listing-33">Listing 33:</d> streaming data processing with <code>while</code> loop example</em>
+    <em><d name="listing-34">Listing 34:</d> streaming data processing with <code>while</code> loop example</em>
 </div>
 
-On the [listing 33](#listing-33), we consider an example of a ```while``` loop with compound variable initialization. This variable cannot be changed inside the ```while``` body. But it can be changed
+On the [listing 34](#listing-34), we consider an example of a ```while``` loop with compound variable initialization. This variable cannot be changed inside the ```while``` body. But it can be changed
 between its iterations. The first question that arises in the case of adding such a feature.
 The variable that is initialized in parentheses ```while``` loop is created once or must be created anew every iteration of the loop. This is a rather complicated question for which we
 do not have any arguments, either for one side or the other. 
@@ -867,7 +941,7 @@ expressions, and then will be followed by an ordinary ```if``` with condition ch
 with compound expressions.
 
 
-<div id="listing-34"></div>
+<div id="listing-35"></div>
 
 ```kotlin
 run{
@@ -881,10 +955,10 @@ run{
 ```
 
 <div style="text-align: center; margin-top: 5px;">
-    <em><d name="listing-34">Listing 34:</d> desugared <code>if</code> prototype</em>
+    <em><d name="listing-35">Listing 35:</d> desugared <code>if</code> prototype</em>
 </div>
 
-On the [listing 34](#listing-34), we can see what will be the desugared [prototype we talked about](#listing-18)
+On the [listing 35](#listing-35), we can see what will be the desugared [prototype we talked about](#listing-18)
 earlier. We decided to do it this way because in this case, the scoping of variables declared inside ```if``` with compound expressions will really correspond to the scope of the ```if```.
 
 ##### Changes in parser
@@ -912,7 +986,7 @@ will first declare all the variables we write in the parentheses of our ```when`
 our ```when``` with compound expressions.
 
 
-<div id="listing-35"></div>
+<div id="listing-36"></div>
 
 ```kotlin
 run{
@@ -926,10 +1000,10 @@ run{
 ```
 
 <div style="text-align: center; margin-top: 5px;">
-    <em><d name="listing-35">Listing 35:</d> desugared <code>when</code> prototype</em>
+    <em><d name="listing-36">Listing 36:</d> desugared <code>when</code> prototype</em>
 </div>
 
-On the [listing 35](#listing-35), we can see what will be the desugared [prototype we talked about](#listing-23)
+On the [listing 36](#listing-36), we can see what will be the desugared [prototype we talked about](#listing-23)
 earlier. We decided to do it this way because, in this case, the scoping of variables
 declared inside ```when``` with compound expressions will really correspond to the scope of
 the ```when```.
@@ -1044,7 +1118,7 @@ In JavaScript, scope is managed through different methods:
 - **Function scope:** Variables declared with var inside a function are accessible throughout that function.
 - **Block scope:** Variables declared with let and const are accessible only within the block in which they are declared (e.g., within a loop or conditional statement).
 
-<div id="listing-36"></div>
+<div id="listing-37"></div>
 
 ```javascript
 function example() {
@@ -1059,7 +1133,7 @@ function example() {
 ```
 
 <div style="text-align: center; margin-top: 5px;">
-    <em><d name="listing-36">Listing 36:</d> example of working with scopes in JavaScript </em>
+    <em><d name="listing-37">Listing 37:</d> example of working with scopes in JavaScript </em>
 </div>
 
 ### Python 
@@ -1089,7 +1163,7 @@ In Rust, scope is determined by modifiers and variable placement:
 
 - **Modules and packages:** Variables and functions can be declared in modules using mod. Visibility is controlled by the pub modifier.
 
-<div id="listing-37"></div>
+<div id="listing-38"></div>
 
 ```rust
 mod example {
@@ -1110,7 +1184,7 @@ fn main() {
 ```
 
 <div style="text-align: center; margin-top: 5px;">
-    <em><d name="listing-37">Listing 37:</d> example of working with scopes in Rust </em>
+    <em><d name="listing-38">Listing 38:</d> example of working with scopes in Rust </em>
 </div>
 
 But there are also other approaches for dealing with scopes. 
@@ -1121,7 +1195,7 @@ Some programming languages have the ability to delete to make a variable invisib
 
 Julia has macros that allow for flexible code management. We can use a macro to remove a variable from an internal scope.
 
-<div id="listing-38"></div>
+<div id="listing-39"></div>
 
 ```Julia
 macro remove_var(x)
@@ -1142,14 +1216,14 @@ println(x)  # x available here, output: 5
 ```
 
 <div style="text-align: center; margin-top: 5px;">
-    <em><d name="listing-38">Listing 38:</d> example of deleting variable from scope in Julia </em>
+    <em><d name="listing-39">Listing 39:</d> example of deleting variable from scope in Julia </em>
 </div>
 
 ### Nim
 
 Nim also supports macros and code manipulation at compile time. Example of a macro to remove a variable from a scope:
 
-<div id="listing-39"></div>
+<div id="listing-40"></div>
 
 ```Nim
 import macros
@@ -1170,14 +1244,14 @@ echo x  # x available here, output: 5
 ```
 
 <div style="text-align: center; margin-top: 5px;">
-    <em><d name="listing-39">Listing 39:</d> example of deleting variable from scope in Nim </em>
+    <em><d name="listing-40">Listing 40:</d> example of deleting variable from scope in Nim </em>
 </div>
 
 ### Scala
 
 Scala supports metaprogramming using macros and annotations, allowing you to create your own compiler annotations.
 
-<div id="listing-40"></div>
+<div id="listing-41"></div>
 
 ```Scala
 import scala.annotation.StaticAnnotation
@@ -1221,7 +1295,7 @@ println(x)  // x available here, output: 5
 ```
 
 <div style="text-align: center; margin-top: 5px;">
-    <em><d name="listing-40">Listing 40:</d> example of deleting variable from scope in Scala </em>
+    <em><d name="listing-41">Listing 41:</d> example of deleting variable from scope in Scala </em>
 </div>
 
 ## Possible extensions
@@ -1241,7 +1315,7 @@ There is also exist an idea to add ```let``` with the ability to declare multipl
 
 #### Possible syntax
 
-<div id="listing-41"></div>
+<div id="listing-42"></div>
 
 ```kotlin
 multilet (a, b, c) { nonNullA, nonNullB, nonNullC ->
@@ -1250,14 +1324,14 @@ multilet (a, b, c) { nonNullA, nonNullB, nonNullC ->
 ```
 
 <div style="text-align: center; margin-top: 5px;">
-    <em><d name="listing-41">Listing 41:</d> possible syntax for multilet in Kotlin </em>
+    <em><d name="listing-42">Listing 42:</d> possible syntax for multilet in Kotlin </em>
 </div>
 
 #### Possible usage 
 
 1. Checking Multiple Input Sources
 
-<div id="listing-42"></div>
+<div id="listing-43"></div>
 
 ```kotlin
 multilet (nameField.text, emailField.text, passwordField.text) { name, email, password ->
@@ -1266,14 +1340,14 @@ multilet (nameField.text, emailField.text, passwordField.text) { name, email, pa
 ```
 
 <div style="text-align: center; margin-top: 5px;">
-    <em><d name="listing-42">Listing 42:</d> possible usage of multilet in Kotlin </em>
+    <em><d name="listing-43">Listing 43:</d> possible usage of multilet in Kotlin </em>
 </div>
 
 ### ```with``` scope function with multiple arguments
 
 There are [requests](https://discuss.kotlinlang.org/t/using-with-function-with-multiple-receivers/2062) to add the ability to use multiple variables in a scope function. 
 
-<div id="listing-43"></div>
+<div id="listing-44"></div>
 
 ```kotlin
 with(args, activity) {
@@ -1284,11 +1358,11 @@ with(args, activity) {
 ```
 
 <div style="text-align: center; margin-top: 5px;">
-    <em><d name="listing-43">Listing 43:</d> possible syntax of <code>with</code> with multiple variables in Kotlin </em>
+    <em><d name="listing-44">Listing 44:</d> possible syntax of <code>with</code> with multiple variables in Kotlin </em>
 </div>
 
 
-<div id="listing-44"></div>
+<div id="listing-45"></div>
 
 ```kotlin
 with(args) {
@@ -1301,7 +1375,7 @@ with(args) {
 ```
 
 <div style="text-align: center; margin-top: 5px;">
-    <em><d name="listing-44">Listing 44:</d> equiavalent of <code>with</code> with multiple variables in Kotlin </em>
+    <em><d name="listing-45">Listing 45:</d> equiavalent of <code>with</code> with multiple variables in Kotlin </em>
 </div>
 
 After checking with BigCode it turned out that 252622 of 81170612 files (0.31%) contain two nested ```with```.
@@ -1316,7 +1390,7 @@ In the end it looks like a good idea to add this feature to kotlin, but on the o
 
 We also considered the idea of adding the ability to pass information that a variable is definitely not ```null``` to the body of the function where the variable will be called.  So that using this information the compiler could avoid compiling parts of the function code related to checking this variable for ```null```.
 
-<div id="listing-45"></div>
+<div id="listing-46"></div>
 
 ```kotlin
 if(val x = fun(); x!=null){
@@ -1335,7 +1409,7 @@ fun1(value : Int?){
 ```
 
 <div style="text-align: center; margin-top: 5px;">
-    <em><d name="listing-45">Listing 45:</d> example of a case where the previously described feature would be useful </em>
+    <em><d name="listing-46">Listing 46:</d> example of a case where the previously described feature would be useful </em>
 </div>
 
 But considering the available tools, adding such a feature would slow down the compiler very much, so we don't think it is expedient.
@@ -1348,7 +1422,7 @@ This has some uscases, let's look at them.
 **1. Avoiding Name Conflicts:** 
 When working with libraries that contain classes or functions with the same names, local imports can help avoid name conflicts. 
 
-<div id="listing-46"></div>
+<div id="listing-47"></div>
 
 ```kotlin
 fun process() {
@@ -1368,13 +1442,13 @@ fun process() {
 
 
 <div style="text-align: center; margin-top: 5px;">
-    <em><d name="listing-46">Listing 46:</d> example of avoiding name conflict using local imports</em>
+    <em><d name="listing-47">Listing 47:</d> example of avoiding name conflict using local imports</em>
 </div>
 
 **2. Restricting Import Scope:** 
 Local imports can restrict the visibility of imported modules to a specific block of code, helping to prevent the accidental use of imported elements outside of that block.
 
-<div id="listing-47"></div>
+<div id="listing-48"></div>
 
 ```kotlin
 fun performAction() {
@@ -1387,14 +1461,14 @@ fun performAction() {
 ```
 
 <div style="text-align: center; margin-top: 5px;">
-    <em><d name="listing-47">Listing 47:</d> example of restricting import scope using local imports</em>
+    <em><d name="listing-48">Listing 48:</d> example of restricting import scope using local imports</em>
 </div>
 
 **3. Managing Dependencies:**
 You can locally import dependencies needed only for a specific test method.
 This makes it easier to understand the dependencies of each test and prevents accidental use of unnecessary dependencies.
 
-<div id="listing-48"></div>
+<div id="listing-49"></div>
 
 ```kotlin
 @Test
@@ -1406,7 +1480,7 @@ fun testMathOperations() {
 ```
 
 <div style="text-align: center; margin-top: 5px;">
-    <em><d name="listing-48">Listing 48:</d> example of managing dependencies using local imports</em>
+    <em><d name="listing-49">Listing 49:</d> example of managing dependencies using local imports</em>
 </div>
 
 As you can see this has some usecases, despite this we could not find any queries regarding this feature on the kotlin forums. 

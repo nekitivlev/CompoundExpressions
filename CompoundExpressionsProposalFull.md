@@ -681,11 +681,10 @@ Such syntax has several primes in comparison with [syntax that was proposed init
 
 1. ***Scoped Variable Declarations:***
     * ***Proposed Syntax:*** Variables declared within the ```if``` condition are scoped to that block, ensuring they are only accessible within the block. This helps prevent unintended side effects and keeps the code clean and safe.
-    * [***Init Block Syntax:***](#listing-14) Similarly, variables declared in the init block are also scoped to the if statement, but combining declarations and checks in one line enhances readability.
-
-2. ***Enhanced Null Safety:***
-    * ***Proposed Syntax:*** Allows for direct checks and smart casts within the ```if``` condition. It ensures that all variables are checked for nullability before being used in the block.
-
+    * [***Init Block Syntax:***](#listing-14) Similarly, variables declared in the init block are also scoped to the ```x``` statement, but combining declarations and checks in one line enhances readability.
+  
+2. ***Enhanced Perfomance:***
+    * ***Proposed Syntax:*** Allows variables to be checked for various conditions as soon as they are declared. And if the variables do not satisfy them, interrupt execution of subsequent expressions.
 
 
     ```kotlin
@@ -695,7 +694,7 @@ Such syntax has several primes in comparison with [syntax that was proposed init
     ```
 
 
-    * [***Init Block Syntax:***](#listing-14)  Requires additional null checks and can lead to more complex and less readable code.
+    * [***Init Block Syntax:***](#listing-14)  Requires you to first check to declare all variables and then check all of them in a separate part of the ```if```-statement condition.
 
     ```kotlin
     if (val x = someCalculation(); val y = anotherCalculation(x); a > b && x != null && x > 10 && y < 20) {
@@ -725,7 +724,7 @@ But this syntax also has some disatvantages.
     ```
 
 2. ***Difficulty in Debugging:***
-    * ***Proposed Syntax:*** Debugging becomes more challenging with the && syntax because all the declarations and conditions are combined. It can be difficult to identify which part of the expression caused an issue or which variable failed the condition.
+    * ***Proposed Syntax:*** Debugging becomes more challenging with the proposed syntax because all the declarations and conditions are combined. It can be difficult to identify which part of the expression caused an issue or which variable failed the condition.
 
     * [***Init Block Syntax:***](#listing-14) The init block approach makes it easier to isolate and debug each variable initialization and condition, as each declaration and condition is explicitly separated.
 

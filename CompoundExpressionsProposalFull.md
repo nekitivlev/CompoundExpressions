@@ -660,6 +660,39 @@ if(val? x = fun(); x > 10){
     <em><d name="listing-26">Listing 26:</d> example with val?</em>
 </div>
 
+### Compound expressions in ```when``` branches
+
+Introducing compound expressions in the conditions of ```when``` branches can further enhance code readability and maintainability in Kotlin. This feature would allow developers to declare and initialize variables directly within the condition of each ```when``` branch, leading to more concise and expressive code.
+
+#### Proposed syntax
+
+<div id="listing-27"></div>
+
+```kotlin
+when {
+    (val a = expr1; a > 10) -> { /* code block */ }
+    (val b = expr2; b < 5) -> { /* code block */ }
+    else -> { /* code block */ }
+}
+```
+
+<div style="text-align: center; margin-top: 5px;">
+    <em><d name="listing-27">Listing 27:</d> possible syntax of when branches with compound expressions</em>
+</div>
+
+#### Benefits
+
+1. **Enhanced Readability:** Keeps the initialization and the condition in a single place, improving the readability of complex conditions.
+2. **Reduced Boilerplate:** Eliminates the need for variable declarations outside the when statement, reducing boilerplate code.
+3. **Scoped Variables:** Ensures that variables declared within the condition are scoped to the corresponding branch, preventing misuse outside their intended context.
+
+#### Potential Uses
+
+1. **Complex Condition Evaluation:** Useful when multiple variables are needed to evaluate conditions, reducing the need for nested or sequential checks.
+2. **Smart Casting:** Facilitates smart casting within the ```when``` branches, ensuring variables are properly typed.
+3. **Streamlined Logic:** Combines initialization and logic in one place, which is particularly beneficial for handling nullable types or performing preliminary calculations.
+
+
 ### Additional notes about alternative syntax for compound expressions in ```if```
 Another potential syntax looks like this. 
 
@@ -932,7 +965,9 @@ Both the ```when``` and ```if``` prototypes have no built-in check for ```null``
 The work on this prototype mainly affects the desugaring stage along
 with changes in the parser. The implemented prototype can be found in the corresponding
 [branch of the GitHub repository](https://github.com/nekitivlev/kotlin/tree/syntax_sugar_prototype).
+
 #### ```if``` prototype
+
 We decided that a good option would be to make a prototype ```if``` with a compound expression syntactic sugar on ```run``` function and an ordinary ```if```.
 This means that the ```if``` with compound expressions will be desugared into a ```run```, which
 will first declare all the variables we write in the parentheses of our ```if``` with compound
@@ -961,6 +996,7 @@ On the [listing 35](#listing-35), we can see what will be the desugared [prototy
 earlier. We decided to do it this way because in this case, the scoping of variables declared inside ```if``` with compound expressions will really correspond to the scope of the ```if```.
 
 ##### Changes in parser
+
 For the parser part, the needed changes was to modify ```kotlin.compiler.psi.main.KotlinExpressionParsing.parseIf()``` function, which parse ```if``` statement. A necessary change is to add the ability to declare variables inside an ```if``` statement, and turn it into ```COMPOUND_EXPRESSION``` in case variables are declared. 
 
 ##### Changes in the ```RAF_FIR``` tree building
@@ -1008,11 +1044,13 @@ declared inside ```when``` with compound expressions will really correspond to t
 the ```when```.
 
 ##### Changes in parser
+
 We modified this function in a similar way as we did for ```if``` statement. Thus, we do
 not change the PSI tree that is built if the parser receives an ordinary when statement as
 input, but if the parser receives a ```when``` statement with compound expressions as input,
 then in addition to the variables declared inside the ```when``` statement with compound expressions, the following nodes will be added: ```CALL_EXPRESSION```, ```COMPOUND_EXPRESSION```,
 ```COMPOUND_EXPRESSION```, ```BLOCK```. As in the case of the ```if``` statement with compound expressions.
+
 ##### Changes in the ```RAF_FIR``` tree building
 
 Since in the case of parsing when with compound expressions our tree contains nodes
@@ -1103,16 +1141,19 @@ As you can see earlier we have not a few arguments for adding compound expressio
 
 
 ## Ways of working with scopes 
+
 There are different approaches to work with scopes in various programming languages. 
 But most popular languages use roughly the same approach for dealing with scopes.
 
 ### Kotlin 
+
 In Kotlin, the scope of variables is determined by their placement in the code:
 - **Local scope:** Variables declared inside a function are only accessible within that function.
 - **Class scope:** Variables declared within a class (e.g., properties) are accessible within that class. Access can be controlled using visibility modifiers (private, protected, internal, public).
 - **Package scope:** Functions and variables declared at the package level are accessible to all files within that package. The internal modifier makes them accessible only within the module.
 
 ### JavaScript
+
 In JavaScript, scope is managed through different methods:
 - **Function scope:** Variables declared with var inside a function are accessible throughout that function.
 - **Block scope:** Variables declared with let and const are accessible only within the block in which they are declared (e.g., within a loop or conditional statement).
@@ -1136,6 +1177,7 @@ function example() {
 </div>
 
 ### Python 
+
 Python uses the LEGB rule (Local, Enclosing, Global, Built-in) to determine variable scope:
 
 - **Local:** Variables declared inside a function.
@@ -1144,6 +1186,7 @@ Python uses the LEGB rule (Local, Enclosing, Global, Built-in) to determine vari
 - **Built-in:** Built-in names, such as print.
 
 ### C++
+
 In C++, variable scope is defined as follows:
 
 - **Local scope:** Variables declared inside functions or code blocks.
@@ -1151,6 +1194,7 @@ In C++, variable scope is defined as follows:
 - **Class scope:** Variables declared within a class are accessible within that class.
 
 ### Swift 
+
 Swift also employs multiple levels of scope:
 
 - **Local scope:** Variables declared inside a function are only accessible within that function.
@@ -1158,6 +1202,7 @@ Swift also employs multiple levels of scope:
 - **Class or struct scope:** Properties are accessible within their classes or structs. Access is controlled by modifiers (private, fileprivate, internal, public, open).
 
 ### Rust 
+
 In Rust, scope is determined by modifiers and variable placement:
 
 - **Modules and packages:** Variables and functions can be declared in modules using mod. Visibility is controlled by the pub modifier.

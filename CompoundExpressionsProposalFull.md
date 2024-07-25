@@ -1424,7 +1424,7 @@ When working with libraries that contain classes or functions with the same name
 <div id="listing-47"></div>
 
 ```kotlin
-fun process() {
+fun process() 
     run {
         import com.example.package1.Helper
         val helper1 = Helper()
@@ -1436,7 +1436,7 @@ fun process() {
         val helper2 = Helper()
         helper2.doSomethingElse()
     }
-}
+
 ```
 
 
@@ -1483,3 +1483,85 @@ fun testMathOperations() {
 </div>
 
 As you can see this has some usecases, despite this we could not find any queries regarding this feature on the kotlin forums. 
+
+### Scopes with controlflow statements
+
+We propose a ```scope``` block where variables can be declared, followed by controlflow statement that utilize these variables within its condition. This approach aims to provide a clear separation of variable initialization and condition evaluation, enhancing code readability and maintainability.
+
+#### Proposed syntax
+
+<div id="listing-50"></div>
+
+```kotlin
+scope {
+    val x = someCalculation()
+    val y = anotherCalculation(x)
+} if (x > 10 && y < 20) {
+    // Block to execute
+}
+```
+
+
+<div style="text-align: center; margin-top: 5px;">
+    <em><d name="listing-50">Listing 50:</d> example of proposed syntax</em>
+</div>
+
+
+#### Advantages of ```scope``` block
+1. **Enhanced Readability and Structure:**
+
+- Clear Separation: By separating variable declarations from the condition, the code becomes easier to read and understand. The scope block clearly indicates where variables are initialized, and the if statement focuses solely on the conditional logic.
+
+- Organized Code: This structure promotes organized and modular code, making it easier to follow the flow of logic.
+
+2. **Improved Maintainability:**
+
+- Easier Modifications: Changes to variable initialization or the condition can be made independently, reducing the risk of introducing errors. This modular approach makes the codebase easier to maintain and update.
+- Scalability: As the complexity of variable initialization grows, the scope block can accommodate these changes without cluttering the control flow statement.
+3. **Error Handling:**
+
+- Isolated Initialization: Any exceptions or errors that occur during variable initialization can be handled within the scope block, keeping the 
+if statement clean and focused on its primary purpose.
+
+4. **Consistent Flow Control:**
+
+- Scoped Variables: Variables declared within the scope block are only accessible within the subsequent if statement, preventing unintended side effects and ensuring that the variables are not used outside their intended context.
+
+#### Disadvatages of ```scope``` block
+
+1. **Increased Verbosity:**
+
+- **Additional Syntax:** Introducing a scope block adds extra syntax, which might be seen as verbose for simple cases. This could potentially make the code look more complicated than necessary for straightforward conditions.
+
+2. **Overhead for Simple Conditions:**
+
+- **Simple Use Cases:** For simple conditions where only one or two variables need to be checked, this syntax might add unnecessary complexity. In such cases, the traditional method might be more appropriate.
+
+### Using ```where``` Clauses for Variable Initialization in Kotlin
+
+We also considered an idea to add ```where``` block similar to ```where``` block in Haskell. 
+
+<div id="listing-51"></div>
+
+```kotlin
+if (x > 10 && y < 20) where {
+    val x = someCalculation()
+    val y = anotherCalculation(x)
+} {
+    // Block to execute
+}
+```
+
+<div style="text-align: center; margin-top: 5px;">
+    <em><d name="listing-51">Listing 51:</d> example of proposed syntax</em>
+</div>
+
+#### Advantages of ```where``` block
+
+1. **Improved Readability:** Clearly delineates where variables are initialized and how they are used, enhancing code readability.
+2. **Scoped Initialization:** Keeps variable scope tightly controlled, minimizing the risk of variable misuse outside the intended context.
+3. **Reduced Boilerplate:** Combines variable initialization and conditional logic, reducing the need for separate initialization blocks.
+
+#### Disadvantages of ```where``` block
+1. **Syntax Complexity:** Introducing a new keyword and syntax structure could increase the complexity of the language, making it harder for beginners to learn.
+

@@ -1714,3 +1714,23 @@ do where {
     <em><d name="listing-56">Listing 56:</d> example of usage <code>scope block</code> with <code>do-while</code></em>
 </div>
 
+4. with ```scope block```
+
+<div id="listing-57"></div>
+
+```kotlin
+scope {
+    val a = 10
+    val b = 20
+} where {
+    val sum = a + b
+} if (sum > 15) {
+    println("Sum is greater than 15")
+} else {
+    println("Sum is 15 or less")
+}
+```
+
+<div style="text-align: center; margin-top: 5px;">
+    <em><d name="listing-57">Listing 57:</d> example of usage <code>scope block</code> with <code>where block</code> with <code>if</code> statement</em>
+</div>

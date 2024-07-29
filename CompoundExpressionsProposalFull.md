@@ -1698,20 +1698,20 @@ if (x > 10) where {
     <em><d name="listing-55">Listing 55:</d> example of usage <code>scope block</code> with nested conditions</em>
 </div>
 
-3. ```do-while``` loop
+3. ```while``` loop
 
 <div id="listing-56"></div>
 
 ```kotlin
-do where {
+while (x > 10) where {
     val x = someCalculation()
-} while (x > 10) {
+}  {
     println("x is greater than 10")
 }
 ```
 
 <div style="text-align: center; margin-top: 5px;">
-    <em><d name="listing-56">Listing 56:</d> example of usage <code>scope block</code> with <code>do-while</code></em>
+    <em><d name="listing-56">Listing 56:</d> example of usage <code>scope block</code> with <code>while</code></em>
 </div>
 
 4. with ```scope block```
@@ -1722,9 +1722,9 @@ do where {
 scope {
     val a = 10
     val b = 20
-} where {
+} if (sum > 15) where {
     val sum = a + b
-} if (sum > 15) {
+}{
     println("Sum is greater than 15")
 } else {
     println("Sum is 15 or less")

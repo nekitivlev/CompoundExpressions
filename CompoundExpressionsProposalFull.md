@@ -161,7 +161,7 @@ if ((x++, y++, x + y > 5)) {
 ```
 
 <div style="text-align: center; margin-top: 5px;">
-    <em><d name="listing-7">Listing 7:</d> JavaScript <code>if</code> statement with compound expression</em>
+    <em><d name="listing-7">Listing 7:</d> JavaScript <code>if</code> statement with compound expression</em>   
 </div>
 
 On the [listing 7](#listing-7), we consider JavaScript ```if``` statement with compound expression, on line
@@ -1582,11 +1582,62 @@ if statement clean and focused on its primary purpose.
 
 - **Simple Use Cases:** For simple conditions where only one or two variables need to be checked, this syntax might add unnecessary complexity. In such cases, the traditional method might be more appropriate.
 
+#### Examples 
+
+1. with ```when``` branches
+
+<div id="listing-51"></div>
+
+```kotlin
+val a = 10
+val b = 20
+
+when {
+    scope {
+        val sum = a + b
+    } sum > 30 -> println("Sum is greater than 30")
+    scope {
+        val diff = a - b
+    } diff < 0 -> println("Difference is negative")
+    scope {
+        val product = a * b
+    } product > 100 -> println("Product is greater than 100")
+    else -> println("Other case")
+}
+```
+
+<div style="text-align: center; margin-top: 5px;">
+    <em><d name="listing-51">Listing 51:</d> example of usage <code>scope block</code> with <code>when</code> branches</em>
+</div>
+
+
+2. with ```if```
+
+<div id="listing-52"></div>
+
+```kotlin
+scope {
+    val username = getUsernameInput()
+    val password = getPasswordInput()
+    val age = getAgeInput()
+} if (username.isNotBlank() && password.isValid() && age >= 18) {
+    // Proceed with registration
+    registerUser(username, password, age)
+} else {
+    // Show validation error
+    showError("Invalid input")
+}
+```
+
+<div style="text-align: center; margin-top: 5px;">
+    <em><d name="listing-52">Listing 52:</d> example of usage <code>scope block</code> with <code>if</code></em>
+</div>
+
 ### Using ```where``` Clauses for Variable Initialization in Kotlin
 
 We also considered an idea to add ```where``` block similar to ```where``` block in Haskell. 
 
-<div id="listing-51"></div>
+<div id="listing-53"></div>
 
 ```kotlin
 if (x > 10 && y < 20) where {
@@ -1598,7 +1649,7 @@ if (x > 10 && y < 20) where {
 ```
 
 <div style="text-align: center; margin-top: 5px;">
-    <em><d name="listing-51">Listing 51:</d> example of proposed syntax</em>
+    <em><d name="listing-53">Listing 53:</d> example of proposed syntax</em>
 </div>
 
 #### Advantages of ```where``` block
@@ -1609,4 +1660,57 @@ if (x > 10 && y < 20) where {
 
 #### Disadvantages of ```where``` block
 1. **Syntax Complexity:** Introducing a new keyword and syntax structure could increase the complexity of the language, making it harder for beginners to learn.
+
+#### Examples
+
+1. with ```when``` branches 
+
+<div id="listing-54"></div>
+
+val maybeNull: String? = "Kotlin"
+
+```kotlin
+when {
+    nonNull.isNotEmpty() where { val nonNull = maybeNull ?: "" }-> println("String is not empty")
+    else -> println("String is null or empty")
+}
+```
+
+<div style="text-align: center; margin-top: 5px;">
+    <em><d name="listing-54">Listing 54:</d> example of usage <code>where block</code> with <code>when</code> branches</em>
+</div>
+
+2. with nested conditions:
+
+<div id="listing-55"></div>
+
+```kotlin
+if (x > 10) where {
+    val x = someCalculation()
+} else if (y < 20) where {
+    val y = anotherCalculation()
+} {
+    println("Either x is greater than 10 or y is less than 20")
+}
+```
+
+<div style="text-align: center; margin-top: 5px;">
+    <em><d name="listing-55">Listing 55:</d> example of usage <code>scope block</code> with nested conditions</em>
+</div>
+
+3. ```do-while``` loop
+
+<div id="listing-56"></div>
+
+```kotlin
+do where {
+    val x = someCalculation()
+} while (x > 10) {
+    println("x is greater than 10")
+}
+```
+
+<div style="text-align: center; margin-top: 5px;">
+    <em><d name="listing-56">Listing 56:</d> example of usage <code>scope block</code> with <code>do-while</code></em>
+</div>
 

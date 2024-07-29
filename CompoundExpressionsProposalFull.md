@@ -1633,7 +1633,7 @@ scope {
     <em><d name="listing-52">Listing 52:</d> example of usage <code>scope block</code> with <code>if</code></em>
 </div>
 
-### Using ```where``` Clauses for Variable Initialization in Kotlin
+### Using ```where``` block for Variable Initialization in Kotlin
 
 We also considered an idea to add ```where``` block similar to ```where``` block in Haskell. 
 
@@ -1667,9 +1667,9 @@ if (x > 10 && y < 20) where {
 
 <div id="listing-54"></div>
 
+```kotlin
 val maybeNull: String? = "Kotlin"
 
-```kotlin
 when {
     nonNull.isNotEmpty() where { val nonNull = maybeNull ?: "" }-> println("String is not empty")
     else -> println("String is null or empty")

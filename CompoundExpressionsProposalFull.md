@@ -33,9 +33,9 @@ fun main() {
 As it can be seen in the [listing 1](#listing-1) on line 3, it is possible to use compound assignments in
 Kotlin in ```when``` statements. First, we read a number and write its value to the val input.
 Then we use input as a variable, which we check in different when branches. Thus, the
-expression inside the parentheses of the when statement is compound. Unfortunately,
+expression inside the parentheses of the ```when``` statement is compound. Unfortunately,
 only one variable can be declared inside these parentheses. Also, if we declare a variable
-inside the when parentheses, we can’t add any expressions inside these parentheses.
+inside the ```when``` parentheses, we can’t add any expressions inside these parentheses.
 
 ## Compound expressions in control flow expressions in other languages
 
@@ -47,7 +47,7 @@ returned.
 
 <div id="listing-2"></div>
 
-```C++
+```c
 for (int i = 0, j = 100; i < j; i++, j--) {
 // Loop body
 }
@@ -336,7 +336,12 @@ blocks to check and use two variables in one function call. Such solutions add u
 
 After checking with BigCode it turned out that 286818 of 81170612 files (0.33%) contain two nested ```let```.
 
+![2+ let usages](./res/2let.jpg)
+
+
 11371 out of 81170612 files (0.01%) contain three or more nested ```let```.
+
+![3+ let usages](./res/3let.jpg)
 
 ## Existing solutions to the problem in working with multiple nullable variables
 
@@ -501,7 +506,7 @@ fun whoIsOldest(person1: Person?, person2: Person?) {
 </div>
 
 On the [listing 19](#listing-19), we consider a scenario where we determine which of two individuals
-is older, and both are represented by nullable ```Person``` objects. The enhanced if syntax facilitates direct checks and smart casts, allowing for seamless access to properties like
+is older, and both are represented by nullable ```Person``` objects. The enhanced ```if``` syntax facilitates direct checks and smart casts, allowing for seamless access to properties like
 age without additional ```null``` checks.
 The benefit in general is that you can use earlier values in later expressions. In the [listing 19](#listing-19), ```p1``` and ```p2``` have already been ```null```-checked, so we can access their ```age``` property
 directly. And because the expressions can be anything that returns a nullable type they
@@ -609,7 +614,7 @@ variables before declaring a condition that is checked in ```when```. Declaratio
 variables are separated by semicolons. At the end of the expression in brackets must be
 a condition, according to which the ```when``` branches will be selected.
 
-There is also an idea to add the ability to only declare variables in the init block and leave when without a condition, so that only to enter some variables in the when scope and then use them there, but a prototype of this kind has not been implemented.
+There is also an idea to add the ability to only declare variables in the init block and leave ```when``` without a condition, so that only to enter some variables in the ```when``` scope and then use them there, but a prototype of this kind has not been implemented.
 
 
 <div id="listing-24"></div>
@@ -626,7 +631,7 @@ when(x; y; ){
 </div>
 
 ### Addtitional notes about null checks in ```when``` and ```if``` prototype
-There was also the idea of making null handling something similar to the existing mechanism with ```!``` and ```?```.
+There was also the idea of making ```null``` handling something similar to the existing mechanism with ```!``` and ```?```.
 
 The idea is to add to ```val``` ```!``` sign in case the variable is definitely not ```null``` and if ```null``` is passed to it further execution is interrupted and ```?``` in case the variable is ```null``` execution is not interrupted.
 
@@ -643,7 +648,7 @@ if(val! x = fun(); x > 10){
 ```
 
 <div style="text-align: center; margin-top: 5px;">
-    <em><d name="listing-25">Listing 25:</d> example with val!</em>
+    <em><d name="listing-25">Listing 25:</d> example with <code>val!</code></em>
 </div>
 
 <div id="listing-26"></div>
@@ -657,7 +662,7 @@ if(val? x = fun(); x > 10){
 ```
 
 <div style="text-align: center; margin-top: 5px;">
-    <em><d name="listing-26">Listing 26:</d> example with val?</em>
+    <em><d name="listing-26">Listing 26:</d> example with <code>val?</code></em>
 </div>
 
 ### Compound expressions in ```when``` branches
@@ -683,7 +688,7 @@ when {
 #### Benefits
 
 1. **Enhanced Readability:** Keeps the initialization and the condition in a single place, improving the readability of complex conditions.
-2. **Reduced Boilerplate:** Eliminates the need for variable declarations outside the when statement, reducing boilerplate code.
+2. **Reduced Boilerplate:** Eliminates the need for variable declarations outside the ```when``` statement, reducing boilerplate code.
 3. **Scoped Variables:** Ensures that variables declared within the condition are scoped to the corresponding branch, preventing misuse outside their intended context.
 
 #### Potential Uses
@@ -740,7 +745,7 @@ But this syntax also has some disatvantages.
 
 1. ***Reduced Readability:***
 
-    * ***Proposed Syntax:*** Using && to combine variable declarations and conditions in a single line can make the code less readable, especially when multiple variables and conditions are involved. The combined expressions can become cluttered and harder to parse quickly.
+    * ***Proposed Syntax:*** Using ```&&``` to combine variable declarations and conditions in a single line can make the code less readable, especially when multiple variables and conditions are involved. The combined expressions can become cluttered and harder to parse quickly.
     
     ```kotlin
     if (a > b && val x = someCalculation() && x > 10 && val y = anotherCalculation(x) && y < 20) {
@@ -768,8 +773,7 @@ But this syntax also has some disatvantages.
 
 ### ```for```
 
-A ```for```-loop is a type of loop specifically designed to iterate over collections or any iter-
-able sequence of elements. It includes an iteration variable, a container expression that
+A ```for```-loop is a type of loop specifically designed to iterate over collections or any iterable sequence of elements. It includes an iteration variable, a container expression that
 provides the elements, and a loop body that executes each element in [the iterable](https://kotlinlang.org/spec/statements.html#loop-statements).
 
 The ```for```-loop is a syntactic construct that can be overloaded, expanding as follows:
@@ -1004,7 +1008,7 @@ For the parser part, the needed changes was to modify ```kotlin.compiler.psi.mai
 Since in the case of compiling ```if``` with compound expressions, we want to get a ```run```
 scope function inside which variables and classic ```if``` will be declared. So the construction of ```RAW_FIR``` tree containing ```if``` with compound expressions will start with the call of
 ```convertCallExpression``` function inside ```LightTreeRawFirExpressionBuilder```. Here we
-have made the necessary code modifications to build a tree corresponding to the run
+have made the necessary code modifications to build a tree corresponding to the ``run``
 scope function.
 
 We also wrote our own function inside ```LightTreeRawFirExpressionBuilder``` responsible for constructing the anonymous function, which contains a block containing all the
@@ -1015,7 +1019,7 @@ control flow statement declared with compound expressions.
 
 #### ```when``` prototype
 
-We decided that a good option would be to make a prototype when with a compound expression syntactic sugar on run function and an ordinary when.
+We decided that a good option would be to make a prototype ```when``` with a compound expression syntactic sugar on run function and an ordinary when.
 This means that the ```when``` with compound expressions will be desugared into a ```run```, which
 will first declare all the variables we write in the parentheses of our ```when``` with compound expressions, and then will be followed by an ordinary ```when``` with a condition check from
 our ```when``` with compound expressions.
@@ -1156,7 +1160,7 @@ In Kotlin, the scope of variables is determined by their placement in the code:
 
 In JavaScript, scope is managed through different methods:
 - **Function scope:** Variables declared with var inside a function are accessible throughout that function.
-- **Block scope:** Variables declared with let and const are accessible only within the block in which they are declared (e.g., within a loop or conditional statement).
+- **Block scope:** Variables declared with ```let``` and ```const``` are accessible only within the block in which they are declared (e.g., within a loop or conditional statement).
 
 <div id="listing-37"></div>
 
@@ -1189,6 +1193,7 @@ Python uses the LEGB rule (Local, Enclosing, Global, Built-in) to determine vari
 
 In C++, variable scope is defined as follows:
 
+- **name spaces:** Variables declared within a class are accesible within that namespace.
 - **Local scope:** Variables declared inside functions or code blocks.
 - **Global scope:** Variables declared outside all functions.
 - **Class scope:** Variables declared within a class are accessible within that class.
@@ -1384,7 +1389,7 @@ multilet (nameField.text, emailField.text, passwordField.text) { name, email, pa
 ```
 
 <div style="text-align: center; margin-top: 5px;">
-    <em><d name="listing-43">Listing 43:</d> possible usage of multilet in Kotlin </em>
+    <em><d name="listing-43">Listing 43:</d> possible usage of <code>multilet</code> in Kotlin </em>
 </div>
 
 ### ```with``` scope function with multiple arguments
@@ -1424,8 +1429,11 @@ with(args) {
 
 After checking with BigCode it turned out that 252622 of 81170612 files (0.31%) contain two nested ```with```.
 
+![2 with](./res/2with.jpg)
+
 2277 out of 81170612 files (~0.00%) contain three or more nested ```with```.
 
+![3 with](./res/3with.jpg)
 Also we were able to find a [custom implementation of this feature](https://discuss.kotlinlang.org/t/multiple-scope-with-function/27429).
 
 In the end it looks like a good idea to add this feature to kotlin, but on the other hand I can't say that adding this feature will improve the existing code much.
@@ -1555,7 +1563,7 @@ scope {
 #### Advantages of ```scope``` block
 1. **Enhanced Readability and Structure:**
 
-- Clear Separation: By separating variable declarations from the condition, the code becomes easier to read and understand. The scope block clearly indicates where variables are initialized, and the if statement focuses solely on the conditional logic.
+- Clear Separation: By separating variable declarations from the condition, the code becomes easier to read and understand. The scope block clearly indicates where variables are initialized, and the ```if``` statement focuses solely on the conditional logic.
 
 - Organized Code: This structure promotes organized and modular code, making it easier to follow the flow of logic.
 
@@ -1563,14 +1571,15 @@ scope {
 
 - Easier Modifications: Changes to variable initialization or the condition can be made independently, reducing the risk of introducing errors. This modular approach makes the codebase easier to maintain and update.
 - Scalability: As the complexity of variable initialization grows, the scope block can accommodate these changes without cluttering the control flow statement.
+
 3. **Error Handling:**
 
 - Isolated Initialization: Any exceptions or errors that occur during variable initialization can be handled within the scope block, keeping the 
-if statement clean and focused on its primary purpose.
+```if``` statement clean and focused on its primary purpose.
 
 4. **Consistent Flow Control:**
 
-- Scoped Variables: Variables declared within the scope block are only accessible within the subsequent if statement, preventing unintended side effects and ensuring that the variables are not used outside their intended context.
+- Scoped Variables: Variables declared within the scope block are only accessible within the subsequent ```if``` statement, preventing unintended side effects and ensuring that the variables are not used outside their intended context.
 
 #### Disadvatages of ```scope``` block
 
@@ -1655,7 +1664,9 @@ if (x > 10 && y < 20) where {
 #### Advantages of ```where``` block
 
 1. **Improved Readability:** Clearly delineates where variables are initialized and how they are used, enhancing code readability.
+
 2. **Scoped Initialization:** Keeps variable scope tightly controlled, minimizing the risk of variable misuse outside the intended context.
+
 3. **Reduced Boilerplate:** Combines variable initialization and conditional logic, reducing the need for separate initialization blocks.
 
 #### Disadvantages of ```where``` block

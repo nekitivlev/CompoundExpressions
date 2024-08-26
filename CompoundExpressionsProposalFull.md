@@ -769,6 +769,34 @@ But this syntax also has some disatvantages.
 3. ***Inconsistent Flow Control:***
     * ***Proposed Syntax:*** Combining multiple declarations and conditions with && can lead to inconsistent flow control, especially if side effects are present in the expressions. The order of evaluation and potential side effects can become less predictable.
 
+    ```kotlin
+    fun example() {
+        var result: Int? = null
+        val a = 5
+        val b = 10
+
+        if (a < b && val x = calculateX(a, b) && x > 0 && val y = calculateY(x) && y > 0) {
+            result = y
+        } else {
+            result = -1
+        }
+
+        println("Result: $result")
+    }
+
+    fun calculateX(a: Int, b: Int): Int {
+        println("Calculating X")
+        return a - b // This will return a negative value
+    }
+
+    fun calculateY(x: Int): Int {
+        println("Calculating Y")
+        return x * 2
+    }
+    ```
+
+    Here you can see that the `calculateY(x)` function is skipped because of the `x > 0` check. However, in some cases, you might expect or need to `calculateY(x)` to be executed for logging, side effects, or other reasons.  
+
     * [***Init Block Syntax:***](#listing-14) The init block syntax provides more consistent and predictable flow control, as each declaration and condition is evaluated in a clear, sequential manner.
 
 ### ```for```
